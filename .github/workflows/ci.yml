@@ -11,8 +11,12 @@ permissions:
 
 jobs:
   native-tests:
-    name: Linux native tests
-    runs-on: ubuntu-24.04
+    name: Native tests (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2022]
+    runs-on: ${{ matrix.os }}
 
     steps:
       - name: Check out source
@@ -22,7 +26,7 @@ jobs:
         run: cmake -S . -B build-ci -DNEOMAXIS_BUILD_TESTS=ON
 
       - name: Build test executables
-        run: cmake --build build-ci --parallel 2
+        run: cmake --build build-ci --config Release --parallel 2
 
       - name: Run tests
-        run: ctest --test-dir build-ci --output-on-failure
+        run: ctest --test-dir build-ci -C Release --output-on-failure
