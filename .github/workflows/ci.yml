@@ -1,0 +1,28 @@
+name: NEO-MAXIS CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  native-tests:
+    name: Linux native tests
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Configure test build
+        run: cmake -S . -B build-ci -DNEOMAXIS_BUILD_TESTS=ON
+
+      - name: Build test executables
+        run: cmake --build build-ci --parallel 2
+
+      - name: Run tests
+        run: ctest --test-dir build-ci --output-on-failure
