@@ -206,7 +206,9 @@ else()
         "${CMAKE_CURRENT_SOURCE_DIR}/include"
         "${SC2KFIX_SOURCE_DIR}/mods"
     )
-
+    target_compile_definitions(neomaxis PRIVATE
+    NOMINMAX
+)
     neomaxis_configure_target(neomaxis)
 
     if(MSVC)
