@@ -1,0 +1,87 @@
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-2362-
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-2363-enum {
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:2364:	BUDGET_RESFUND,
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:2365:	BUDGET_COMFUND,
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:2366:	BUDGET_INDFUND,
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:2367:	BUDGET_ORDINANCE,
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:2368:	BUDGET_BOND,
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:2369:	BUDGET_POLICE,
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:2370:	BUDGET_FIRE,
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:2371:	BUDGET_HEALTH,
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:2372:	BUDGET_SCHOOL,
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:2373:	BUDGET_COLLEGE,
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:2374:	BUDGET_ROAD,
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:2375:	BUDGET_HIGHWAY,
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:2376:	BUDGET_BRIDGE,
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:2377:	BUDGET_RAIL,
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:2378:	BUDGET_SUBWAY,
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:2379:	BUDGET_TUNNEL,
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:2380:	BUDGET_COUNT
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-2381-};
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-2382-
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-2383-enum {
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:2384:	ORDINANCE_SALES_TAX = 0,
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:2385:	ORDINANCE_INCOME_TAX,
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-2386-	ORDINANCE_LEGALIZED_GAMBLING,
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-2387-	ORDINANCE_PARKING_FINES,
+--
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-2541-	CITYTOOL_BUTTON_CITYGRAPHS,
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-2542-	CITYTOOL_BUTTON_CITYINDUSTRY,
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:2543:	CITYTOOL_BUTTON_BUDGET,
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-2544-	CITYTOOL_BUTTON_DISPLAYBUILDINGS,
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-2545-	CITYTOOL_BUTTON_DISPLAYSIGNS,
+--
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-2870-	int iFundMonth[12];
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-2871-	int iCurrentCosts;
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:2872:	int iFundingPercent;
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-2873-	int iYearToDateCost;
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-2874-	int iEstimatedCost;
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:2875:} budget_t;
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-2876-
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-2877-typedef struct {
+--
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-3088-GAMECALL(0x4015C8, void, __thiscall, CityToolBar_AdjustLayers, CCityToolBar *, BOOL)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-3089-GAMECALL(0x4015CD, CCurrencyString *, __thiscall, CurrencyString_SetString, CCurrencyString *, const char *pSrc, int iSize, double idAmount)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:3090:GAMECALL(0x4015E6, void, __cdecl, SimulationPrepareBudgetDialog, int)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-3091-GAMECALL(0x401654, void, __cdecl, LoadTilesFromMemory, char *)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-3092-GAMECALL(0x401672, void, __cdecl, SimulationToggleGrantReward, __int16 iReward, int iToggle)
+--
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-3305-GAMECALL(0x402D15, void, __stdcall, ClearLabels)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-3306-GAMECALL(0x402D1F, __int16, __cdecl, CalcTileHit8, __int16, __int16)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:3307:GAMECALL(0x402D2E, void, __stdcall, UpdateBudgetInformation, void)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-3308-GAMECALL(0x402D33, int, __thiscall, SimcityApp_ConvertClassicCity, CSimcityAppPrimary *, char *)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-3309-GAMECALL(0x402D51, void, __stdcall, SimulationUpdateMonthlyTrafficData, void)
+--
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-3526-GAMEOFF_ARR(CMFC3XString,	cityToolGroupStrings,		0x4C94C8)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-3527-GAMEOFF(DWORD,	dwDisasterActive,			0x4C9EE8)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:3528:GAMEOFF_ARR(WORD, wArrBondData,				0x4C9EF0)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-3529-GAMEOFF_ARR(CMFC3XString,	cStrDataArchiveNames,	0x4CA160)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-3530-GAMEOFF(CMFC3XString,	strUnusedString,		0x4CA188)
+--
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-3540-GAMEOFF(WORD,	wIndustryConnect,			0x4CA3F0)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-3541-GAMEOFF(__int16 *,	pIndividualIndDemands,	0x4CA3F4)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:3542:GAMEOFF(DWORD,	dwInterestRateSum,			0x4CA400)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-3543-GAMEOFF(WORD,	EditData,					0x4CA404)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-3544-GAMEOFF(WORD,	wSubwayXUNDCount,			0x4CA41C)
+--
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-3608-GAMEOFF(BYTE,	bWeatherRain,				0x4CB3D4)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-3609-GAMEOFF(WORD,	wSewerBonus,				0x4CB3DC)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:3610:GAMEOFF(__int16 *,	pIndividualIndTaxRate,	0x4CB3E0)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-3611-GAMEOFF(WORD,	wCityCurrentSeason,			0x4CB3E8)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-3612-GAMEOFF(microsim_t*, pMicrosimArr,			0x4CB3EC)
+--
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-3626-GAMEOFF(WORD,	wCurrentCityToolGroup,		0x4CB464)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-3627-GAMEOFF(int *,	cwCityStats,				0x4CC474)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:3628:GAMEOFF(BOOL,	bOptionsAutoBudget,			0x4CC4B0)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-3629-GAMEOFF(int,	dwCityWorkforceEQ,			0x4CC4B4)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-3630-GAMEOFF(DWORD,	dwWaterUsedPercentage,		0x4CC4B8)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-3631-GAMEOFF(BOOL,	bNewspaperExtra,			0x4CC4BC)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:3632:GAMEOFF(budget_t*,	pBudgetArr,				0x4CC4CC)		// Needs reverse engineering. See wiki.
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-3633-GAMEOFF(BOOL,	bNoDisasters,				0x4CC4D4)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-3634-GAMEOFF(__int16*,	wNeighborNameIdx,		0x4CC4DC)
+--
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-3636-GAMEOFF(__int16,	wStadiumSportsTeams,	0x4CC4E0)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-3637-GAMEOFF(BYTE,	bMilitaryBaseType,			0x4CC4E4)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:3638:GAMEOFF(int,	dwCityBonds,				0x4CC4E8)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-3639-GAMEOFF(DWORD,	dwCityTrafficCount,			0x4CC6F4)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h-3640-GAMEOFF_ARR(__int16,	wCityDemand,		0x4CC8F8)

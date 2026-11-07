@@ -1,0 +1,907 @@
+==================================================
+NEO-MAXIS — ECONOMY DATA TRACE
+==================================================
+
+===== 1. SAVE-LOAD ECONOMY READER =====
+		free(pTmp);
+	}
+	return ret;
+}
+
+static int L_SimcityApp_OpenCityInfo(CSimcityAppPrimary *pSCApp, FILE *pFile, int nSize) {
+	int ret;
+	__int16 nArrOffset, nArrNextOffset, nPosMain, nPosSub;
+	char szResStr[255 + 1], szBuf[31 + 1], szErrStr[1024 + 1];
+	__int16 wGrantedRewards;
+	bool bDisableRewardButton;
+
+	ret = 0;
+	// This was previously referenced though seemingly not used; preserving.
+	//strcpy_s(szErrStr, "Unable To Load, Old File Version = \r\n");
+	if (L_SimcityApp_OpenCityCompressed(pSCApp, pFile, nSize, pMiscInfo, MISCINF_ALLOC_SIZE)) {
+		L_byteswap_buffer(pMiscInfo, MISCINF_ALLOC_SIZE);
+		nArrOffset = 0;
+		if (pMiscInfo[nArrOffset] == 290) {
+			nArrNextOffset = nArrOffset + 1;
+			wCityMode = (__int16)pMiscInfo[nArrNextOffset++];
+			wViewRotation = (__int16)pMiscInfo[nArrNextOffset++];
+			wCityStartYear = (__int16)pMiscInfo[nArrNextOffset++];
+			dwCityDays = pMiscInfo[nArrNextOffset++];
+			dwCityFunds = pMiscInfo[nArrNextOffset++];
+			dwCityBonds = pMiscInfo[nArrNextOffset++];
+			wCityDifficulty = (__int16)pMiscInfo[nArrNextOffset++];
+			wCityProgression = (__int16)pMiscInfo[nArrNextOffset++];
+			dwCityValue = pMiscInfo[nArrNextOffset++];
+			dwCityLandValue = pMiscInfo[nArrNextOffset++];
+			dwCityCrime = pMiscInfo[nArrNextOffset++];
+			dwCityTrafficCount = pMiscInfo[nArrNextOffset++];
+			dwCityPollution = pMiscInfo[nArrNextOffset++];
+			dwCityFame = pMiscInfo[nArrNextOffset++];
+			dwCityAdvertising = pMiscInfo[nArrNextOffset++];
+			dwCityGarbage = pMiscInfo[nArrNextOffset++];
+			dwCityWorkforcePercent = pMiscInfo[nArrNextOffset++];
+			dwCityWorkforceLE = pMiscInfo[nArrNextOffset++];
+			dwCityWorkforceEQ = pMiscInfo[nArrNextOffset++];
+			dwNationalPopulation = pMiscInfo[nArrNextOffset++];
+			dwNationalValue = pMiscInfo[nArrNextOffset++];
+			wNationalFedRate = (__int16)pMiscInfo[nArrNextOffset++];
+			wNationalEconomyTrend = (__int16)pMiscInfo[nArrNextOffset++];
+			bWeatherHeat = (BYTE)pMiscInfo[nArrNextOffset++];
+			bWeatherWind = (BYTE)pMiscInfo[nArrNextOffset++];
+			bWeatherRain = (BYTE)pMiscInfo[nArrNextOffset++];
+			bWeatherTrend = (BYTE)pMiscInfo[nArrNextOffset++];
+			wSetTriggerDisasterType = (__int16)pMiscInfo[nArrNextOffset++];
+			dwCityOldResPopulation = pMiscInfo[nArrNextOffset++];
+			wGrantedRewards = (__int16)pMiscInfo[nArrNextOffset++];
+			bDisableRewardButton = false;
+			if (!dwGrantedItems[CITYTOOL_GROUP_REWARDS] || wGrantedRewards) {
+				if (dwGrantedItems[CITYTOOL_GROUP_REWARDS] || !wGrantedRewards)
+					bDisableRewardButton = true;
+			}
+			if (bDisableRewardButton)
+				Game_MainFrame_DisableCityToolBarButton((CMainFrame *)pSCApp->m_pMainWnd, CITYTOOL_BUTTON_REWARDS);
+			dwGrantedItems[CITYTOOL_GROUP_REWARDS] = wGrantedRewards;
+			nArrOffset = nArrNextOffset;
+			for (nPosMain = 0; nPosMain < 20; ++nPosMain) {
+				nArrNextOffset = nArrOffset + 1;
+				pRawPopRatioTable[nPosMain] = pMiscInfo[nArrOffset];
+				pEQRatioTable[nPosMain] = pMiscInfo[nArrNextOffset++];
+				pLERatioTable[nPosMain] = pMiscInfo[nArrNextOffset];
+				nArrOffset = nArrNextOffset + 1;
+			}
+			for (nPosMain = 0; nPosMain < 11; ++nPosMain) {
+				nArrNextOffset = nArrOffset + 1;
+				pIndividualIndDemands[nPosMain] = (__int16)pMiscInfo[nArrOffset];
+				pIndividualIndTaxRate[nPosMain] = (__int16)pMiscInfo[nArrNextOffset++];
+				pIndividualIndRatio[nPosMain] = pMiscInfo[nArrNextOffset];
+				nArrOffset = nArrNextOffset + 1;
+			}
+			for (nPosMain = 0; nPosMain < 256; ++nPosMain)
+				wTileCount[nPosMain] = (__int16)pMiscInfo[nArrOffset++];
+			for (nPosMain = 0; nPosMain < 8; ++nPosMain)
+				pZonePops[nPosMain] = pMiscInfo[nArrOffset++];
+			for (nPosMain = 0; nPosMain < 50; ++nPosMain)
+				wArrBondData[nPosMain] = (__int16)pMiscInfo[nArrOffset++];
+			for (nPosMain = 0; nPosMain < 4; ++nPosMain) {
+				nArrNextOffset = nArrOffset + 1;
+				wNeighborNameIdx[nPosMain] = (__int16)pMiscInfo[nArrOffset];
+				__int16 nIdx = wNeighborNameIdx[nPosMain];
+				if (nIdx)
+					Game_LoadNamedEntryFromRsrcOffset(&szNeighborCities[MAX_NEIGH_BUF_SIZE * nPosMain], 1000, nIdx);
+				else
+					strcpy_s(&szNeighborCities[MAX_NEIGH_BUF_SIZE * nPosMain], MAX_NEIGH_BUF_SIZE, "Ocean");
+				dwNeighborPopulation[nPosMain] = pMiscInfo[nArrNextOffset++];
+				dwNeighborValue[nPosMain] = pMiscInfo[nArrNextOffset++];
+				dwNeighborFame[nPosMain] = pMiscInfo[nArrNextOffset];
+				nArrOffset = nArrNextOffset + 1;
+			}
+			for (nPosMain = 0; nPosMain < 8; ++nPosMain)
+				wCityDemand[nPosMain] = (__int16)pMiscInfo[nArrOffset++];
+			for (nPosMain = 0; nPosMain < 17; ++nPosMain)
+				wCityInventionYears[nPosMain] = (__int16)pMiscInfo[nArrOffset++];
+			for (nPosMain = 0; nPosMain < 16; ++nPosMain) {
+				nArrNextOffset = nArrOffset + 1;
+				pBudgetArr[nPosMain].iCurrentCosts = pMiscInfo[nArrOffset];
+				pBudgetArr[nPosMain].iFundingPercent = pMiscInfo[nArrNextOffset++];
+				pBudgetArr[nPosMain].iYearToDateCost = pMiscInfo[nArrNextOffset];
+				nArrOffset = nArrNextOffset + 1;
+				for (nPosSub = 0; nPosSub < 12; ++nPosSub) {
+					nArrNextOffset = nArrOffset + 1;
+					pBudgetArr[nPosMain].iCountMonth[nPosSub] = pMiscInfo[nArrOffset];
+					pBudgetArr[nPosMain].iFundMonth[nPosSub] = pMiscInfo[nArrNextOffset];
+					nArrOffset = nArrNextOffset + 1;
+				}
+			}
+			nArrNextOffset = nArrOffset + 1;
+			bYearEndFlag = pMiscInfo[nArrOffset];
+			wWaterLevel = (__int16)pMiscInfo[nArrNextOffset++];
+			bCityHasOcean = pMiscInfo[nArrNextOffset++];
+			bCityHasRiver = pMiscInfo[nArrNextOffset++];
+			bMilitaryBaseType = (BYTE)pMiscInfo[nArrNextOffset];
+			nArrOffset = nArrNextOffset + 1;
+
+===== 2. SAVE ECONOMY WRITER =====
+ABORTWRITE:
+	free(pTmp);
+	free(pDst);
+	return ret;
+}
+
+static int L_SimcityApp_WriteCityInfo(CSimcityAppPrimary *pSCApp, FILE *pFile) {
+	CSimcityView *pSCView;
+	__int16 nArrOffset, nArrNextOffset, nPosMain, nPosSub;
+
+	pSCView = Game_SimcityApp_PointerToCSimcityViewClass(pSCApp);
+	nArrOffset = 0;
+	nArrNextOffset = nArrOffset + 1;
+	pMiscInfo[nArrOffset] = 290;
+	pMiscInfo[nArrNextOffset++] = wCityMode;
+	pMiscInfo[nArrNextOffset++] = wViewRotation;
+	pMiscInfo[nArrNextOffset++] = wCityStartYear;
+	pMiscInfo[nArrNextOffset++] = dwCityDays;
+	pMiscInfo[nArrNextOffset++] = dwCityFunds;
+	pMiscInfo[nArrNextOffset++] = dwCityBonds;
+	pMiscInfo[nArrNextOffset++] = wCityDifficulty;
+	pMiscInfo[nArrNextOffset++] = wCityProgression;
+	pMiscInfo[nArrNextOffset++] = dwCityValue;
+	pMiscInfo[nArrNextOffset++] = dwCityLandValue;
+	pMiscInfo[nArrNextOffset++] = dwCityCrime;
+	pMiscInfo[nArrNextOffset++] = dwCityTrafficCount;
+	pMiscInfo[nArrNextOffset++] = dwCityPollution;
+	pMiscInfo[nArrNextOffset++] = dwCityFame;
+	pMiscInfo[nArrNextOffset++] = dwCityAdvertising;
+	pMiscInfo[nArrNextOffset++] = dwCityGarbage;
+	pMiscInfo[nArrNextOffset++] = dwCityWorkforcePercent;
+	pMiscInfo[nArrNextOffset++] = dwCityWorkforceLE;
+	pMiscInfo[nArrNextOffset++] = dwCityWorkforceEQ;
+	pMiscInfo[nArrNextOffset++] = dwNationalPopulation;
+	pMiscInfo[nArrNextOffset++] = dwNationalValue;
+	pMiscInfo[nArrNextOffset++] = wNationalFedRate;
+	pMiscInfo[nArrNextOffset++] = wNationalEconomyTrend;
+	pMiscInfo[nArrNextOffset++] = bWeatherHeat;
+	pMiscInfo[nArrNextOffset++] = bWeatherWind;
+	pMiscInfo[nArrNextOffset++] = bWeatherRain;
+	pMiscInfo[nArrNextOffset++] = bWeatherTrend;
+	pMiscInfo[nArrNextOffset++] = wSetTriggerDisasterType;
+	pMiscInfo[nArrNextOffset++] = cwCityStats[1];
+	pMiscInfo[nArrNextOffset] = dwGrantedItems[CITYTOOL_GROUP_REWARDS];
+	nArrOffset = nArrNextOffset + 1;
+	for (nPosMain = 0; nPosMain < 20; ++nPosMain) {
+		nArrNextOffset = nArrOffset + 1;
+		pMiscInfo[nArrOffset] = pRawPopRatioTable[nPosMain];
+		pMiscInfo[nArrNextOffset++] = pEQRatioTable[nPosMain];
+		pMiscInfo[nArrNextOffset] = pLERatioTable[nPosMain];
+		nArrOffset = nArrNextOffset + 1;
+	}
+	for (nPosMain = 0; nPosMain < 11; ++nPosMain) {
+		nArrNextOffset = nArrOffset + 1;
+		pMiscInfo[nArrOffset] = pIndividualIndDemands[nPosMain];
+		pMiscInfo[nArrNextOffset++] = pIndividualIndTaxRate[nPosMain];
+		pMiscInfo[nArrNextOffset] = pIndividualIndRatio[nPosMain];
+		nArrOffset = nArrNextOffset + 1;
+	}
+	for (nPosMain = 0; nPosMain < 256; ++nPosMain)
+		pMiscInfo[nArrOffset++] = wTileCount[nPosMain];
+	for (nPosMain = 0; nPosMain < 8; ++nPosMain)
+		pMiscInfo[nArrOffset++] = pZonePops[nPosMain];
+	for (nPosMain = 0; nPosMain < 50; ++nPosMain)
+		pMiscInfo[nArrOffset++] = wArrBondData[nPosMain];
+	for (nPosMain = 0; nPosMain < 4; ++nPosMain) {
+		nArrNextOffset = nArrOffset + 1;
+		pMiscInfo[nArrOffset] = wNeighborNameIdx[nPosMain];
+		pMiscInfo[nArrNextOffset++] = dwNeighborPopulation[nPosMain];
+		pMiscInfo[nArrNextOffset++] = dwNeighborValue[nPosMain];
+		pMiscInfo[nArrNextOffset] = dwNeighborFame[nPosMain];
+		nArrOffset = nArrNextOffset + 1;
+	}
+	for (nPosMain = 0; nPosMain < 8; ++nPosMain)
+		pMiscInfo[nArrOffset++] = wCityDemand[nPosMain];
+	for (nPosMain = 0; nPosMain < 17; ++nPosMain)
+		pMiscInfo[nArrOffset++] = wCityInventionYears[nPosMain];
+	for (nPosMain = 0; nPosMain < 16; ++nPosMain) {
+		nArrNextOffset = nArrOffset + 1;
+		pMiscInfo[nArrOffset] = pBudgetArr[nPosMain].iCurrentCosts;
+		pMiscInfo[nArrNextOffset++] = pBudgetArr[nPosMain].iFundingPercent;
+		pMiscInfo[nArrNextOffset] = pBudgetArr[nPosMain].iYearToDateCost;
+		nArrOffset = nArrNextOffset + 1;
+		for (nPosSub = 0; nPosSub < 12; ++nPosSub) {
+			nArrNextOffset = nArrOffset + 1;
+			pMiscInfo[nArrOffset] = pBudgetArr[nPosMain].iCountMonth[nPosSub];
+			pMiscInfo[nArrNextOffset] = pBudgetArr[nPosMain].iFundMonth[nPosSub];
+			nArrOffset = nArrNextOffset + 1;
+		}
+	}
+	nArrNextOffset = nArrOffset + 1;
+	pMiscInfo[nArrOffset] = bYearEndFlag;
+	pMiscInfo[nArrNextOffset++] = wWaterLevel;
+	pMiscInfo[nArrNextOffset++] = bCityHasOcean;
+	pMiscInfo[nArrNextOffset++] = bCityHasRiver;
+	pMiscInfo[nArrNextOffset] = bMilitaryBaseType;
+	nArrOffset = nArrNextOffset + 1;
+	for (nPosMain = 0; nPosMain < 6; ++nPosMain) {
+		nArrNextOffset = nArrOffset + 1;
+		pMiscInfo[nArrOffset] = pPaperArr[nPosMain].bName;
+		pMiscInfo[nArrNextOffset++] = pPaperArr[nPosMain].bStyle;
+
+===== 3. ECONOMY MEMORY DECLARATIONS =====
+GAMEOFF_ARR(PALETTEENTRY,	pPalAnimMain,		0x4C87D8)
+GAMEOFF_ARR(PALETTEENTRY,	pPalOnCycle,		0x4C8BD8)
+GAMEOFF_ARR(PALETTEENTRY,	pPalOffCycle,		0x4C90A8)
+GAMEOFF(WORD,	wDisasterFloodArea,			0x4C93A8)
+GAMEOFF(WORD,	wCityDevelopedTiles,		0x4C93B4)
+GAMEOFF(WORD,	wIndustrialMixPollutionBonus, 0x4C9428)
+GAMEOFF(WORD,	wViewRotation,				0x4C942C)
+GAMEOFF(DWORD *,	pRawPopRatioTable,		0x4C94B4)
+GAMEOFF(DWORD *,	pEQRatioTable,			0x4C94BC)
+GAMEOFF(BOOL,	bCityHasOcean,				0x4C94C0)
+GAMEOFF(DWORD,	dwArcologyPopulation,		0x4C94C4)
+GAMEOFF_ARR(CMFC3XString,	cityToolGroupStrings,		0x4C94C8)
+GAMEOFF(DWORD,	dwDisasterActive,			0x4C9EE8)
+GAMEOFF_ARR(WORD, wArrBondData,				0x4C9EF0)
+GAMEOFF_ARR(CMFC3XString,	cStrDataArchiveNames,	0x4CA160)
+GAMEOFF(CMFC3XString,	strUnusedString,		0x4CA188)
+GAMEOFF(DWORD,	dwCityOldResPopulation,	0x4CA194)
+GAMEOFF(CMFC3XString, pszCityName,				0x4CA1A0)
+GAMEOFF(WORD,	wNationalEconomyTrend,		0x4CA1BC)
+GAMEOFF(news_t*,	pNewsArr,				0x4CA1C0)
+GAMEOFF(WORD,	wPrisonBonus,				0x4CA1DC)
+GAMEOFF(WORD,	wCityTerrainSliderHills,	0x4CA1E0)
+GAMEOFF(__int16,	wClipXhigh,				0x4CA1E4)
+GAMEOFF(WORD,	wIndustrialMixBonus,		0x4CA1E8)
+GAMEOFF(WORD,	wCurrentMapToolGroup,		0x4CA1EC)
+GAMEOFF(WORD,	wIndustryConnect,			0x4CA3F0)
+GAMEOFF(__int16 *,	pIndividualIndDemands,	0x4CA3F4)
+GAMEOFF(DWORD,	dwInterestRateSum,			0x4CA400)
+GAMEOFF(WORD,	EditData,					0x4CA404)
+GAMEOFF(WORD,	wSubwayXUNDCount,			0x4CA41C)
+GAMEOFF(WORD,	wSetTriggerDisasterType,	0x4CA420)
+GAMEOFF(DWORD*,	pZonePops,					0x4CA428)
+GAMEOFF(__int16,	wCityMode,				0x4CA42C)
+GAMEOFF(WORD,	wOldArrests,				0x4CA430)
+GAMEOFF(COLORREF,	colGameBackgndAbove,	0x4CA43C)
+GAMEOFF(int,	dwCityLandValue,			0x4CA440)
+GAMEOFF(int,	dwCityFunds,				0x4CA444)
+GAMEOFF(__int16 *, wTileCount,				0x4CA4C8)		// WORD wTileCount[256]
+GAMEOFF(DWORD,	dwCityValue,				0x4CA4D0)
+GAMEOFF(BOOL,	bOptionsAutoGoto,			0x4CA5D8)
+GAMEOFF(DWORD,	dwCityGarbage,				0x4CA5F0)		// Unused in vanilla game (sort of)
+GAMEOFF(WORD,	wCityStartYear,				0x4CA5F4)
+GAMEOFF(DWORD,	dwCityUnemployment,			0x4CA5F8)
+GAMEOFF(DWORD*, dwNeighborValue,			0x4CA804)		// DWORD dwNeighborValue[4]
+GAMEOFF(__int16,	wNewspaperChoice,		0x4CA808)
+GAMEOFF(__int16,	wWaterLevel,			0x4CA818)
+GAMEOFF(__int16,	wDisasterObject,		0x4CA81C)
+GAMEOFF(__int16,	wClipYhigh,				0x4CA820)
+GAMEOFF(DWORD,	dwNationalPopulation,		0x4CA928)
+GAMEOFF(DWORD*, dwNeighborFame,				0x4CA92C)		// DWORD dwNeighborFame[4]
+GAMEOFF(WORD*,	wMilitaryTiles,				0x4CA934)
+GAMEOFF(WORD,	wNationalFedRate,			0x4CA938)
+GAMEOFF(__int16,	wCurrentDisasterType,	0x4CA93C)
+GAMEOFF(DWORD,	dwCityOrdinances,			0x4CAA40)
+GAMEOFF_ARR(CMFC3XBrush,	MainBrushFace,	0x4CAA48)
+GAMEOFF(DWORD,	dwPowerUsedPercentage,		0x4CAA50)
+GAMEOFF(POINT,	disasterPoint,				0x4CAA58)
+GAMEOFF(DWORD *,	pLERatioTable,			0x4CAA70)
+GAMEOFF(DWORD,	dwCityPopulation,			0x4CAA74)
+GAMEOFF(WORD,	wCityTerrainSliderWater,	0x4CAAF8)
+GAMEOFF(CMFC3XFileException,	fileExcept,	0x4CAB00)
+GAMEOFF_PTR(DWORD,	pSomeWnd,				0x4CAC18)		// Perhaps this is the active view window? (unclear)
+GAMEOFF(DWORD*, dwNeighborPopulation,		0x4CAD10)		// DWORD dwNeighborPopulation[4]
+GAMEOFF(BOOL,	bMainFrameInactive,			0x4CAD14)
+GAMEOFF(__int16,	iScreenOffSetX,			0x4CAD18)
+GAMEOFF(__int16,	iScreenOffSetY,			0x4CAD1C)
+GAMEOFF(COLORREF,	colGameBackgndUnder,	0x4CAD20)
+GAMEOFF(paper_t*,	pPaperArr,				0x4CAD24)
+GAMEOFF(DWORD,	dwCityFame,					0x4CAD28)		// Unused in vanilla game
+GAMEOFF(BOOL,	bYearEndFlag,				0x4CAD2C)
+GAMEOFF(__int16,	iScreenPointX,			0x4CAD30)		// Used here in MapToolMenuAction
+GAMEOFF(__int16,	iScreenPointY,			0x4CAD34)		// Used here in MapToolMenuAction
+GAMEOFF(CMFC3XString,	strCityFilename,	0x4CAD38)
+GAMEOFF(BOOL,	bInScenario,				0x4CAD44)
+GAMEOFF_ARR(char, szNeighborCities,			0x4CAD58)		// char[32 * 4]
+GAMEOFF(WORD,	wCityTerrainSliderTrees,	0x4CADD8)
+GAMEOFF(__int16,	wConnectTiles,			0x4CADDC)
+GAMEOFF(BYTE,	bWeatherHeat,				0x4CADE0)
+GAMEOFF(RECT,	dirtyRect,					0x4CAD48)
+GAMEOFF_ARR(char, stNeighborCities,			0x4CAD58)
+GAMEOFF(__int16,	wClipXlow,				0x4CAE00)
+GAMEOFF(DWORD,	dwCityDays,					0x4CAE04)
+GAMEOFF(BYTE,	bWeatherWind,				0x4CAE0C)
+GAMEOFF(WORD,	wCityProgression,			0x4CB010)
+GAMEOFF(DWORD,	dwNationalValue,			0x4CB014)
+GAMEOFF(DWORD,	dwCityAdvertising,			0x4CB018)		// Unused in vanilla game
+GAMEOFF(WORD,	wCityCurrentMonth,			0x4CB01C)
+GAMEOFF(WORD,	wCityElapsedYears,			0x4CB020)
+GAMEOFF(__int16,	wClipYlow,				0x4CB024)
+GAMEOFF_ARR(CMFC3XBrush,	MainBrushBorder,	0x4CB1B0)
+GAMEOFF(sprite_header_t*, pArrSpriteHeaders, 0x4CB1B8)
+GAMEOFF(WORD,	wUnknownGameVarOne,			0x4CB1CC)
+GAMEOFF(BOOL,	bNewspaperSubscription,		0x4CB3D0)
+GAMEOFF(BYTE,	bWeatherRain,				0x4CB3D4)
+GAMEOFF(WORD,	wSewerBonus,				0x4CB3DC)
+GAMEOFF(__int16 *,	pIndividualIndTaxRate,	0x4CB3E0)
+GAMEOFF(WORD,	wCityCurrentSeason,			0x4CB3E8)
+GAMEOFF(microsim_t*, pMicrosimArr,			0x4CB3EC)
+GAMEOFF(DWORD*,	pIndividualIndRatio,		0x4CB3F0)
+GAMEOFF(BOOL,	bCityHasRiver,				0x4CB3F8)
+GAMEOFF(COLORREF,	colBtnFace,				0x4CB3FC)
+GAMEOFF(WORD,	LastCursorX,				0x4CB400)
+GAMEOFF(WORD,	wCityDifficulty,			0x4CB404)
+GAMEOFF(WORD,	LastCursorY,				0x4CB408)
+GAMEOFF(BYTE,	bWeatherTrend,				0x4CB40C)
+GAMEOFF(int,	dwCityWorkforceLE,			0x4CB410)
+GAMEOFF_ARR(__int16,	wCityInventionYears,	0x4CB430)
+GAMEOFF(DWORD,	dwCityCrime,				0x4CB454)
+GAMEOFF(__int16,	wCityCenterX,			0x4CB458)
+GAMEOFF(__int16,	wCityCenterY,			0x4CB45C)
+GAMEOFF(DWORD,	dwCityWorkforcePercent,		0x4CB460)
+GAMEOFF(WORD,	wCurrentCityToolGroup,		0x4CB464)
+GAMEOFF(int *,	cwCityStats,				0x4CC474)
+GAMEOFF(BOOL,	bOptionsAutoBudget,			0x4CC4B0)
+GAMEOFF(int,	dwCityWorkforceEQ,			0x4CC4B4)
+GAMEOFF(DWORD,	dwWaterUsedPercentage,		0x4CC4B8)
+GAMEOFF(BOOL,	bNewspaperExtra,			0x4CC4BC)
+GAMEOFF(budget_t*,	pBudgetArr,				0x4CC4CC)		// Needs reverse engineering. See wiki.
+GAMEOFF(BOOL,	bNoDisasters,				0x4CC4D4)
+GAMEOFF(__int16*,	wNeighborNameIdx,		0x4CC4DC)
+GAMEOFF(WORD,	wCommerceConnect,			0x4CC4D8)
+GAMEOFF(__int16,	wStadiumSportsTeams,	0x4CC4E0)
+GAMEOFF(BYTE,	bMilitaryBaseType,			0x4CC4E4)
+GAMEOFF(int,	dwCityBonds,				0x4CC4E8)
+GAMEOFF(DWORD,	dwCityTrafficCount,			0x4CC6F4)
+GAMEOFF_ARR(__int16,	wCityDemand,		0x4CC8F8)
+GAMEOFF(DWORD,	dwCityPollution,			0x4CC910)		// Needs reverse engineering. See wiki.
+GAMEOFF(scenStruct_t,	scenarioAttrib,		0x4CC918)
+GAMEOFF_ARR(WORD,	wSelectedSubtool,		0x4CC950)
+GAMEOFF_PTR(const char *,	pCustomTileNamesFromSpriteID,	0x4CCEC8)
+GAMEOFF(__int16,	wGrantedArcologies,		0x4CDB2C)
+GAMEOFF(WORD,	wCurBndsX1,					0x4CDB68)
+GAMEOFF(WORD,	wCurBndsX2,					0x4CDB6C)
+GAMEOFF(WORD,	wCurBndsY1,					0x4CDB70)
+GAMEOFF(WORD,	wCurBndsY2,					0x4CDB74)
+GAMEOFF(DWORD,	dwLFSRState,				0x4CDB7C)
+
+===== 4. ACTUAL BUDGET PREPARATION FUNCTION =====
+
+/home/HAH/Games/SimCity2000/SC2K/SIMCITY.EXE:     file format pei-i386
+
+
+Disassembly of section .text:
+
+004731e0 <.text+0x721e0>:
+  4731e0:	64 a1 00 00 00 00    	mov    eax,fs:0x0
+  4731e6:	55                   	push   ebp
+  4731e7:	8b ec                	mov    ebp,esp
+  4731e9:	6a ff                	push   0xffffffff
+  4731eb:	68 e9 33 47 00       	push   0x4733e9
+  4731f0:	50                   	push   eax
+  4731f1:	64 89 25 00 00 00 00 	mov    DWORD PTR fs:0x0,esp
+  4731f8:	a1 b0 c4 4c 00       	mov    eax,ds:0x4cc4b0
+  4731fd:	83 ec 5c             	sub    esp,0x5c
+  473200:	85 c0                	test   eax,eax
+  473202:	53                   	push   ebx
+  473203:	56                   	push   esi
+  473204:	57                   	push   edi
+  473205:	0f 85 ce 01 00 00    	jne    0x4733d9
+  47320b:	a1 2c 70 4c 00       	mov    eax,ds:0x4c702c
+  473210:	8b 48 1c             	mov    ecx,DWORD PTR [eax+0x1c]
+  473213:	51                   	push   ecx
+  473214:	ff 15 30 fe 4e 00    	call   DWORD PTR ds:0x4efe30
+  47321a:	85 c0                	test   eax,eax
+  47321c:	0f 85 b7 01 00 00    	jne    0x4733d9
+  473222:	6a 00                	push   0x0
+  473224:	b9 10 70 4c 00       	mov    ecx,0x4c7010
+  473229:	6a 18                	push   0x18
+  47322b:	e8 c2 fa f8 ff       	call   0x402cf2
+  473230:	b9 10 70 4c 00       	mov    ecx,0x4c7010
+  473235:	e8 c9 e9 f8 ff       	call   0x401c03
+  47323a:	6a 04                	push   0x4
+  47323c:	e8 6c ea f8 ff       	call   0x401cad
+  473241:	0f bf c0             	movsx  eax,ax
+  473244:	83 c4 04             	add    esp,0x4
+  473247:	83 f8 03             	cmp    eax,0x3
+  47324a:	77 2b                	ja     0x473277
+  47324c:	ff 24 85 fc 33 47 00 	jmp    DWORD PTR [eax*4+0x4733fc]
+  473253:	68 20 27 00 00       	push   0x2720
+  473258:	eb 13                	jmp    0x47326d
+  47325a:	68 15 27 00 00       	push   0x2715
+  47325f:	eb 0c                	jmp    0x47326d
+  473261:	68 12 27 00 00       	push   0x2712
+  473266:	eb 05                	jmp    0x47326d
+  473268:	68 1a 27 00 00       	push   0x271a
+  47326d:	b9 10 70 4c 00       	mov    ecx,0x4c7010
+  473272:	e8 9d f1 f8 ff       	call   0x402414
+  473277:	b9 2c 01 00 00       	mov    ecx,0x12c
+  47327c:	a1 04 ae 4c 00       	mov    eax,ds:0x4cae04
+  473281:	99                   	cdq
+  473282:	f7 f9                	idiv   ecx
+  473284:	0f bf 15 f4 a5 4c 00 	movsx  edx,WORD PTR ds:0x4ca5f4
+  47328b:	b9 19 00 00 00       	mov    ecx,0x19
+  473290:	bb 0c 00 00 00       	mov    ebx,0xc
+  473295:	8d 34 02             	lea    esi,[edx+eax*1]
+  473298:	a1 04 ae 4c 00       	mov    eax,ds:0x4cae04
+  47329d:	99                   	cdq
+  47329e:	f7 f9                	idiv   ecx
+  4732a0:	99                   	cdq
+  4732a1:	f7 fb                	idiv   ebx
+  4732a3:	8d 04 52             	lea    eax,[edx+edx*2]
+  4732a6:	8b 15 a0 a1 4c 00    	mov    edx,DWORD PTR ds:0x4ca1a0
+  4732ac:	56                   	push   esi
+  4732ad:	90                   	nop
+  4732ae:	8b 0c 85 f8 71 4c 00 	mov    ecx,DWORD PTR [eax*4+0x4c71f8]
+  4732b5:	8d 45 98             	lea    eax,[ebp-0x68]
+  4732b8:	51                   	push   ecx
+  4732b9:	8b 1d b4 fd 4e 00    	mov    ebx,DWORD PTR ds:0x4efdb4
+  4732bf:	56                   	push   esi
+  4732c0:	52                   	push   edx
+  4732c1:	68 18 a0 4e 00       	push   0x4ea018
+  4732c6:	50                   	push   eax
+  4732c7:	ff d3                	call   ebx
+  4732c9:	83 c4 18             	add    esp,0x18
+  4732cc:	8b 4d 08             	mov    ecx,DWORD PTR [ebp+0x8]
+  4732cf:	85 c9                	test   ecx,ecx
+  4732d1:	90                   	nop
+  4732d2:	68 d0 0a 00 00       	push   0xad0
+  4732d7:	75 1b                	jne    0x4732f4
+  4732d9:	e8 20 8e 01 00       	call   0x48c0fe
+  4732de:	83 c4 04             	add    esp,0x4
+  4732e1:	85 c0                	test   eax,eax
+  4732e3:	74 0b                	je     0x4732f0
+  4732e5:	8b 0d 2c 70 4c 00    	mov    ecx,DWORD PTR ds:0x4c702c
+  4732eb:	51                   	push   ecx
+  4732ec:	8b c8                	mov    ecx,eax
+  4732ee:	eb 19                	jmp    0x473309
+  4732f0:	33 ff                	xor    edi,edi
+  4732f2:	eb 1c                	jmp    0x473310
+  4732f4:	bf 00 00 00 00       	mov    edi,0x0
+  4732f9:	e8 00 8e 01 00       	call   0x48c0fe
+  4732fe:	83 c4 04             	add    esp,0x4
+  473301:	8b c8                	mov    ecx,eax
+  473303:	85 c9                	test   ecx,ecx
+  473305:	74 09                	je     0x473310
+  473307:	6a 00                	push   0x0
+  473309:	e8 db f3 f8 ff       	call   0x4026e9
+  47330e:	8b f8                	mov    edi,eax
+  473310:	8d 45 98             	lea    eax,[ebp-0x68]
+  473313:	8d 8f ac 0a 00 00    	lea    ecx,[edi+0xaac]
+  473319:	50                   	push   eax
+  47331a:	e8 4b fb 02 00       	call   0x4a2e6a
+  47331f:	8d 4d e8             	lea    ecx,[ebp-0x18]
+  473322:	e8 01 f9 02 00       	call   0x4a2c28
+  473327:	c7 45 fc 00 00 00 00 	mov    DWORD PTR [ebp-0x4],0x0
+  47332e:	a1 2c ad 4c 00       	mov    eax,ds:0x4cad2c
+  473333:	85 c0                	test   eax,eax
+  473335:	74 07                	je     0x47333e
+  473337:	68 7a 03 00 00       	push   0x37a
+  47333c:	eb 05                	jmp    0x473343
+  47333e:	68 7b 03 00 00       	push   0x37b
+  473343:	8d 4d e8             	lea    ecx,[ebp-0x18]
+  473346:	e8 08 01 03 00       	call   0x4a3453
+  47334b:	56                   	push   esi
+  47334c:	8b 45 e8             	mov    eax,DWORD PTR [ebp-0x18]
+  47334f:	50                   	push   eax
+  473350:	8d 4d 98             	lea    ecx,[ebp-0x68]
+  473353:	51                   	push   ecx
+  473354:	ff d3                	call   ebx
+  473356:	83 c4 0c             	add    esp,0xc
+  473359:	8d 4d 98             	lea    ecx,[ebp-0x68]
+  47335c:	51                   	push   ecx
+  47335d:	8d 8f c4 0a 00 00    	lea    ecx,[edi+0xac4]
+  473363:	e8 02 fb 02 00       	call   0x4a2e6a
+  473368:	8b 0d 2c ad 4c 00    	mov    ecx,DWORD PTR ds:0x4cad2c
+  47336e:	85 c9                	test   ecx,ecx
+  473370:	74 10                	je     0x473382
+  473372:	68 7c 03 00 00       	push   0x37c
+  473377:	8d 4d e8             	lea    ecx,[ebp-0x18]
+  47337a:	46                   	inc    esi
+  47337b:	e8 d3 00 03 00       	call   0x4a3453
+  473380:	eb 0d                	jmp    0x47338f
+  473382:	68 7d 03 00 00       	push   0x37d
+  473387:	8d 4d e8             	lea    ecx,[ebp-0x18]
+  47338a:	e8 c4 00 03 00       	call   0x4a3453
+  47338f:	56                   	push   esi
+  473390:	8b 45 e8             	mov    eax,DWORD PTR [ebp-0x18]
+  473393:	50                   	push   eax
+  473394:	8d 4d 98             	lea    ecx,[ebp-0x68]
+  473397:	51                   	push   ecx
+  473398:	ff d3                	call   ebx
+  47339a:	83 c4 0c             	add    esp,0xc
+  47339d:	8d 45 98             	lea    eax,[ebp-0x68]
+  4733a0:	8d 8f b8 0a 00 00    	lea    ecx,[edi+0xab8]
+  4733a6:	90                   	nop
+  4733a7:	50                   	push   eax
+  4733a8:	e8 bd fa 02 00       	call   0x4a2e6a
+  4733ad:	8b 37                	mov    esi,DWORD PTR [edi]
+  4733af:	8b cf                	mov    ecx,edi
+  4733b1:	ff 56 70             	call   DWORD PTR [esi+0x70]
+  4733b4:	85 ff                	test   edi,edi
+  4733b6:	74 07                	je     0x4733bf
+  4733b8:	6a 01                	push   0x1
+  4733ba:	8b cf                	mov    ecx,edi
+  4733bc:	ff 56 04             	call   DWORD PTR [esi+0x4]
+  4733bf:	6a 00                	push   0x0
+  4733c1:	b9 10 70 4c 00       	mov    ecx,0x4c7010
+  4733c6:	6a 00                	push   0x0
+  4733c8:	e8 25 f9 f8 ff       	call   0x402cf2
+  4733cd:	c7 45 fc ff ff ff ff 	mov    DWORD PTR [ebp-0x4],0xffffffff
+  4733d4:	e8 1a 00 00 00       	call   0x4733f3
+  4733d9:	8b 45 f4             	mov    eax,DWORD PTR [ebp-0xc]
+  4733dc:	5f                   	pop    edi
+  4733dd:	64 a3 00 00 00 00    	mov    fs:0x0,eax
+  4733e3:	5e                   	pop    esi
+  4733e4:	5b                   	pop    ebx
+  4733e5:	8b e5                	mov    esp,ebp
+  4733e7:	5d                   	pop    ebp
+  4733e8:	c3                   	ret
+  4733e9:	b8 28 c7 4d 00       	mov    eax,0x4dc728
+  4733ee:	e9 a7 88 01 00       	jmp    0x48bc9a
+  4733f3:	8d 4d e8             	lea    ecx,[ebp-0x18]
+  4733f6:	e9 b5 f8 02 00       	jmp    0x4a2cb0
+  4733fb:	90                   	nop
+  4733fc:	53                   	push   ebx
+  4733fd:	32 47 00             	xor    al,BYTE PTR [edi+0x0]
+  473400:	5a                   	pop    edx
+  473401:	32 47 00             	xor    al,BYTE PTR [edi+0x0]
+  473404:	61                   	popa
+  473405:	32 47 00             	xor    al,BYTE PTR [edi+0x0]
+  473408:	68 32 47 00 cc       	push   0xcc004732
+  47340d:	cc                   	int3
+  47340e:	cc                   	int3
+  47340f:	cc                   	int3
+  473410:	cc                   	int3
+  473411:	cc                   	int3
+  473412:	cc                   	int3
+  473413:	cc                   	int3
+  473414:	cc                   	int3
+  473415:	cc                   	int3
+  473416:	cc                   	int3
+  473417:	cc                   	int3
+  473418:	cc                   	int3
+  473419:	cc                   	int3
+  47341a:	cc                   	int3
+  47341b:	cc                   	int3
+  47341c:	cc                   	int3
+  47341d:	cc                   	int3
+  47341e:	cc                   	int3
+  47341f:	cc                   	int3
+  473420:	cc                   	int3
+  473421:	cc                   	int3
+  473422:	cc                   	int3
+  473423:	cc                   	int3
+  473424:	cc                   	int3
+  473425:	cc                   	int3
+  473426:	cc                   	int3
+  473427:	cc                   	int3
+  473428:	cc                   	int3
+  473429:	cc                   	int3
+  47342a:	cc                   	int3
+  47342b:	cc                   	int3
+  47342c:	cc                   	int3
+  47342d:	cc                   	int3
+  47342e:	cc                   	int3
+  47342f:	cc                   	int3
+  473430:	cc                   	int3
+  473431:	cc                   	int3
+  473432:	cc                   	int3
+  473433:	cc                   	int3
+  473434:	cc                   	int3
+  473435:	cc                   	int3
+  473436:	cc                   	int3
+  473437:	cc                   	int3
+  473438:	cc                   	int3
+  473439:	cc                   	int3
+  47343a:	cc                   	int3
+  47343b:	cc                   	int3
+  47343c:	cc                   	int3
+  47343d:	cc                   	int3
+  47343e:	cc                   	int3
+  47343f:	cc                   	int3
+  473440:	cc                   	int3
+  473441:	cc                   	int3
+  473442:	cc                   	int3
+  473443:	cc                   	int3
+  473444:	cc                   	int3
+  473445:	cc                   	int3
+  473446:	cc                   	int3
+  473447:	cc                   	int3
+  473448:	cc                   	int3
+  473449:	cc                   	int3
+  47344a:	cc                   	int3
+  47344b:	cc                   	int3
+  47344c:	cc                   	int3
+  47344d:	cc                   	int3
+  47344e:	cc                   	int3
+  47344f:	cc                   	int3
+  473450:	cc                   	int3
+  473451:	cc                   	int3
+  473452:	cc                   	int3
+  473453:	cc                   	int3
+  473454:	cc                   	int3
+  473455:	cc                   	int3
+  473456:	cc                   	int3
+  473457:	cc                   	int3
+  473458:	cc                   	int3
+  473459:	cc                   	int3
+  47345a:	cc                   	int3
+  47345b:	cc                   	int3
+  47345c:	cc                   	int3
+  47345d:	cc                   	int3
+  47345e:	cc                   	int3
+  47345f:	cc                   	int3
+  473460:	cc                   	int3
+  473461:	cc                   	int3
+  473462:	cc                   	int3
+  473463:	cc                   	int3
+  473464:	cc                   	int3
+  473465:	cc                   	int3
+  473466:	cc                   	int3
+  473467:	cc                   	int3
+  473468:	cc                   	int3
+  473469:	cc                   	int3
+  47346a:	cc                   	int3
+  47346b:	cc                   	int3
+  47346c:	cc                   	int3
+  47346d:	cc                   	int3
+  47346e:	cc                   	int3
+  47346f:	cc                   	int3
+  473470:	cc                   	int3
+  473471:	cc                   	int3
+  473472:	cc                   	int3
+  473473:	cc                   	int3
+  473474:	cc                   	int3
+  473475:	cc                   	int3
+  473476:	cc                   	int3
+  473477:	cc                   	int3
+  473478:	cc                   	int3
+  473479:	cc                   	int3
+  47347a:	cc                   	int3
+  47347b:	cc                   	int3
+  47347c:	cc                   	int3
+  47347d:	cc                   	int3
+  47347e:	cc                   	int3
+  47347f:	cc                   	int3
+  473480:	cc                   	int3
+  473481:	cc                   	int3
+  473482:	cc                   	int3
+  473483:	cc                   	int3
+  473484:	cc                   	int3
+  473485:	cc                   	int3
+  473486:	cc                   	int3
+  473487:	cc                   	int3
+  473488:	cc                   	int3
+  473489:	cc                   	int3
+  47348a:	cc                   	int3
+  47348b:	cc                   	int3
+  47348c:	cc                   	int3
+  47348d:	cc                   	int3
+  47348e:	cc                   	int3
+  47348f:	cc                   	int3
+  473490:	cc                   	int3
+  473491:	cc                   	int3
+  473492:	cc                   	int3
+  473493:	cc                   	int3
+  473494:	cc                   	int3
+  473495:	cc                   	int3
+  473496:	cc                   	int3
+  473497:	cc                   	int3
+  473498:	cc                   	int3
+  473499:	cc                   	int3
+  47349a:	cc                   	int3
+  47349b:	cc                   	int3
+  47349c:	cc                   	int3
+  47349d:	cc                   	int3
+  47349e:	cc                   	int3
+  47349f:	cc                   	int3
+
+===== 5. ACTUAL BUDGET UPDATE FUNCTION =====
+
+/home/HAH/Games/SimCity2000/SC2K/SIMCITY.EXE:     file format pei-i386
+
+
+Disassembly of section .text:
+
+004734a0 <.text+0x724a0>:
+  4734a0:	53                   	push   ebx
+  4734a1:	33 c9                	xor    ecx,ecx
+  4734a3:	56                   	push   esi
+  4734a4:	a1 2c ad 4c 00       	mov    eax,ds:0x4cad2c
+  4734a9:	57                   	push   edi
+  4734aa:	3b c1                	cmp    eax,ecx
+  4734ac:	55                   	push   ebp
+  4734ad:	0f 84 c8 00 00 00    	je     0x47357b
+  4734b3:	66 39 0d 1c b0 4c 00 	cmp    WORD PTR ds:0x4cb01c,cx
+  4734ba:	0f 85 bb 00 00 00    	jne    0x47357b
+  4734c0:	33 f6                	xor    esi,esi
+  4734c2:	0f bf f9             	movsx  edi,cx
+  4734c5:	0f bf 04 7d b0 9e 4e 	movsx  eax,WORD PTR [edi*2+0x4e9eb0]
+  4734cc:	00 
+  4734cd:	8d 14 40             	lea    edx,[eax+eax*2]
+  4734d0:	8d 1c 95 00 00 00 00 	lea    ebx,[edx*4+0x0]
+  4734d7:	85 db                	test   ebx,ebx
+  4734d9:	74 1f                	je     0x4734fa
+  4734db:	8d 04 fd 00 00 00 00 	lea    eax,[edi*8+0x0]
+  4734e2:	8b 15 cc c4 4c 00    	mov    edx,DWORD PTR ds:0x4cc4cc
+  4734e8:	2b c7                	sub    eax,edi
+  4734ea:	c1 e0 04             	shl    eax,0x4
+  4734ed:	8b 44 10 68          	mov    eax,DWORD PTR [eax+edx*1+0x68]
+  4734f1:	99                   	cdq
+  4734f2:	f7 fb                	idiv   ebx
+  4734f4:	01 05 44 a4 4c 00    	add    DWORD PTR ds:0x4ca444,eax
+  4734fa:	66 41                	inc    cx
+  4734fc:	8d 14 fd 00 00 00 00 	lea    edx,[edi*8+0x0]
+  473503:	2b d7                	sub    edx,edi
+  473505:	a1 cc c4 4c 00       	mov    eax,ds:0x4cc4cc
+  47350a:	c1 e2 04             	shl    edx,0x4
+  47350d:	66 83 f9 10          	cmp    cx,0x10
+  473511:	89 74 02 68          	mov    DWORD PTR [edx+eax*1+0x68],esi
+  473515:	7c ab                	jl     0x4734c2
+  473517:	33 f6                	xor    esi,esi
+  473519:	8b 0d f8 66 4e 00    	mov    ecx,DWORD PTR ds:0x4e66f8
+  47351f:	89 35 2c ad 4c 00    	mov    DWORD PTR ds:0x4cad2c,esi
+  473525:	e8 88 e2 f8 ff       	call   0x4017b2
+  47352a:	e8 98 f5 f8 ff       	call   0x402ac7
+  47352f:	39 35 44 a4 4c 00    	cmp    DWORD PTR ds:0x4ca444,esi
+  473535:	7d 44                	jge    0x47357b
+  473537:	a1 b0 c4 4c 00       	mov    eax,ds:0x4cc4b0
+  47353c:	3b c6                	cmp    eax,esi
+  47353e:	74 3b                	je     0x47357b
+  473540:	6a 02                	push   0x2
+  473542:	8b 0d 2c 70 4c 00    	mov    ecx,DWORD PTR ds:0x4c702c
+  473548:	e8 2b ea f8 ff       	call   0x401f78
+  47354d:	68 01 04 00 00       	push   0x401
+  473552:	8b 40 04             	mov    eax,DWORD PTR [eax+0x4]
+  473555:	56                   	push   esi
+  473556:	50                   	push   eax
+  473557:	ff 15 58 fe 4e 00    	call   DWORD PTR ds:0x4efe58
+  47355d:	8b 0d f8 66 4e 00    	mov    ecx,DWORD PTR ds:0x4e66f8
+  473563:	89 35 b0 c4 4c 00    	mov    DWORD PTR ds:0x4cc4b0,esi
+  473569:	e8 dc f4 f8 ff       	call   0x402a4a
+  47356e:	6a ff                	push   0xffffffff
+  473570:	56                   	push   esi
+  473571:	68 24 01 00 00       	push   0x124
+  473576:	e8 d4 ed 03 00       	call   0x4b234f
+  47357b:	66 33 c9             	xor    cx,cx
+  47357e:	0f bf f1             	movsx  esi,cx
+  473581:	0f bf 1d 1c b0 4c 00 	movsx  ebx,WORD PTR ds:0x4cb01c
+  473588:	66 41                	inc    cx
+  47358a:	8d 04 f5 00 00 00 00 	lea    eax,[esi*8+0x0]
+  473591:	2b c6                	sub    eax,esi
+  473593:	8d 14 f5 00 00 00 00 	lea    edx,[esi*8+0x0]
+  47359a:	2b d6                	sub    edx,esi
+  47359c:	c1 e2 04             	shl    edx,0x4
+  47359f:	8d 3c 85 00 00 00 00 	lea    edi,[eax*4+0x0]
+  4735a6:	a1 cc c4 4c 00       	mov    eax,ds:0x4cc4cc
+  4735ab:	03 df                	add    ebx,edi
+  4735ad:	8b 74 10 60          	mov    esi,DWORD PTR [eax+edx*1+0x60]
+  4735b1:	89 34 98             	mov    DWORD PTR [eax+ebx*4],esi
+  4735b4:	a1 cc c4 4c 00       	mov    eax,ds:0x4cc4cc
+  4735b9:	0f bf 1d 1c b0 4c 00 	movsx  ebx,WORD PTR ds:0x4cb01c
+  4735c0:	8b 74 10 64          	mov    esi,DWORD PTR [eax+edx*1+0x64]
+  4735c4:	03 df                	add    ebx,edi
+  4735c6:	89 74 98 30          	mov    DWORD PTR [eax+ebx*4+0x30],esi
+  4735ca:	a1 cc c4 4c 00       	mov    eax,ds:0x4cc4cc
+  4735cf:	03 c2                	add    eax,edx
+  4735d1:	8b 50 60             	mov    edx,DWORD PTR [eax+0x60]
+  4735d4:	8b 58 68             	mov    ebx,DWORD PTR [eax+0x68]
+  4735d7:	0f af 50 64          	imul   edx,DWORD PTR [eax+0x64]
+  4735db:	03 da                	add    ebx,edx
+  4735dd:	66 83 f9 10          	cmp    cx,0x10
+  4735e1:	89 58 68             	mov    DWORD PTR [eax+0x68],ebx
+  4735e4:	7c 98                	jl     0x47357e
+  4735e6:	66 83 3d 1c b0 4c 00 	cmp    WORD PTR ds:0x4cb01c,0xb
+  4735ed:	0b 
+  4735ee:	75 0a                	jne    0x4735fa
+  4735f0:	c7 05 2c ad 4c 00 01 	mov    DWORD PTR ds:0x4cad2c,0x1
+  4735f7:	00 00 00 
+  4735fa:	8b 0d cc c4 4c 00    	mov    ecx,DWORD PTR ds:0x4cc4cc
+  473600:	66 bb 09 00          	mov    bx,0x9
+  473604:	a1 e8 c4 4c 00       	mov    eax,ds:0x4cc4e8
+  473609:	89 81 20 02 00 00    	mov    DWORD PTR [ecx+0x220],eax
+  47360f:	8b 0d cc c4 4c 00    	mov    ecx,DWORD PTR ds:0x4cc4cc
+  473615:	8b 15 c8 a4 4c 00    	mov    edx,DWORD PTR ds:0x4ca4c8
+  47361b:	66 8b 82 a4 01 00 00 	mov    ax,WORD PTR [edx+0x1a4]
+  473622:	66 99                	cwd
+  473624:	66 f7 fb             	idiv   bx
+  473627:	0f bf c0             	movsx  eax,ax
+  47362a:	89 81 90 02 00 00    	mov    DWORD PTR [ecx+0x290],eax
+  473630:	8b 0d cc c4 4c 00    	mov    ecx,DWORD PTR ds:0x4cc4cc
+  473636:	8b 15 c8 a4 4c 00    	mov    edx,DWORD PTR ds:0x4ca4c8
+  47363c:	66 8b 82 a6 01 00 00 	mov    ax,WORD PTR [edx+0x1a6]
+  473643:	66 99                	cwd
+  473645:	66 f7 fb             	idiv   bx
+  473648:	0f bf c0             	movsx  eax,ax
+  47364b:	89 81 00 03 00 00    	mov    DWORD PTR [ecx+0x300],eax
+  473651:	8b 15 c8 a4 4c 00    	mov    edx,DWORD PTR ds:0x4ca4c8
+  473657:	66 8b 82 a2 01 00 00 	mov    ax,WORD PTR [edx+0x1a2]
+  47365e:	66 99                	cwd
+  473660:	66 f7 fb             	idiv   bx
+  473663:	0f bf c8             	movsx  ecx,ax
+  473666:	a1 cc c4 4c 00       	mov    eax,ds:0x4cc4cc
+  47366b:	89 88 70 03 00 00    	mov    DWORD PTR [eax+0x370],ecx
+  473671:	8b 0d cc c4 4c 00    	mov    ecx,DWORD PTR ds:0x4cc4cc
+  473677:	8b 15 c8 a4 4c 00    	mov    edx,DWORD PTR ds:0x4ca4c8
+  47367d:	66 8b 82 ac 01 00 00 	mov    ax,WORD PTR [edx+0x1ac]
+  473684:	66 99                	cwd
+  473686:	66 f7 fb             	idiv   bx
+  473689:	0f bf c0             	movsx  eax,ax
+  47368c:	89 81 e0 03 00 00    	mov    DWORD PTR [ecx+0x3e0],eax
+  473692:	8b 15 c8 a4 4c 00    	mov    edx,DWORD PTR ds:0x4ca4c8
+  473698:	8b 0d cc c4 4c 00    	mov    ecx,DWORD PTR ds:0x4cc4cc
+  47369e:	0f bf 82 b2 01 00 00 	movsx  eax,WORD PTR [edx+0x1b2]
+  4736a5:	99                   	cdq
+  4736a6:	83 e2 0f             	and    edx,0xf
+  4736a9:	03 c2                	add    eax,edx
+  4736ab:	33 d2                	xor    edx,edx
+  4736ad:	c1 f8 04             	sar    eax,0x4
+  4736b0:	0f bf c0             	movsx  eax,ax
+  4736b3:	89 81 50 04 00 00    	mov    DWORD PTR [ecx+0x450],eax
+  4736b9:	66 b9 0a 00          	mov    cx,0xa
+  4736bd:	0f bf f1             	movsx  esi,cx
+  4736c0:	66 41                	inc    cx
+  4736c2:	8b c6                	mov    eax,esi
+  4736c4:	c1 e6 03             	shl    esi,0x3
+  4736c7:	2b f0                	sub    esi,eax
+  4736c9:	a1 cc c4 4c 00       	mov    eax,ds:0x4cc4cc
+  4736ce:	c1 e6 04             	shl    esi,0x4
+  4736d1:	66 83 f9 0f          	cmp    cx,0xf
+  4736d5:	89 54 06 60          	mov    DWORD PTR [esi+eax*1+0x60],edx
+  4736d9:	7e e2                	jle    0x4736bd
+  4736db:	66 b9 1d 00          	mov    cx,0x1d
+  4736df:	66 83 f9 1d          	cmp    cx,0x1d
+  4736e3:	7c 06                	jl     0x4736eb
+  4736e5:	66 83 f9 2c          	cmp    cx,0x2c
+  4736e9:	7c 24                	jl     0x47370f
+  4736eb:	66 83 f9 3f          	cmp    cx,0x3f
+  4736ef:	7c 06                	jl     0x4736f7
+  4736f1:	66 83 f9 47          	cmp    cx,0x47
+  4736f5:	7c 18                	jl     0x47370f
+  4736f7:	66 83 f9 4b          	cmp    cx,0x4b
+  4736fb:	74 12                	je     0x47370f
+  4736fd:	66                   	data16
+  4736fe:	83                   	.byte 0x83
+  4736ff:	f9                   	stc
+
+===== 6. ALL BUDGET POINTER REFERENCES =====
+/home/HAH/Downloads/sc2kfix-source/hooks/hook_graphscanstats.cpp:329:			dwInterestRateSum += wArrBondData[wCurrBond];
+/home/HAH/Downloads/sc2kfix-source/hooks/hook_sc2k1996_miscellaneous.cpp:1042:			wArrBondData[dwCityBonds++] = wNationalFedRate;
+/home/HAH/Downloads/sc2kfix-source/hooks/hook_sc2k1996_miscellaneous.cpp:1044:			pBudgetArr[BUDGET_BOND].iCurrentCosts = dwCityBonds;
+/home/HAH/Downloads/sc2kfix-source/hooks/hook_sc2k1996_miscellaneous.cpp:1045:			pBudgetArr[BUDGET_BOND].iCountMonth[0] = 1;
+/home/HAH/Downloads/sc2kfix-source/hooks/hook_sc2k1996_miscellaneous.cpp:1046:			pBudgetArr[BUDGET_BOND].iFundingPercent = 10000 * dwInterestRateSum / dwCityBonds;
+/home/HAH/Downloads/sc2kfix-source/hooks/hook_sc2k1996_miscellaneous.cpp:1047:			pBudgetArr[BUDGET_BOND].iFundMonth[0] = pBudgetArr[BUDGET_BOND].iFundingPercent;
+/home/HAH/Downloads/sc2kfix-source/hooks/hook_sc2k1996_miscellaneous.cpp:1048:			pBudgetArr[BUDGET_BOND].iYearToDateCost = pBudgetArr[BUDGET_BOND].iFundingPercent * pBudgetArr[BUDGET_BOND].iCurrentCosts;
+/home/HAH/Downloads/sc2kfix-source/hooks/hook_sc2k1996_miscellaneous.cpp:1049:			pBudgetArr[BUDGET_BOND].iEstimatedCost = 12 * pBudgetArr[BUDGET_BOND].iYearToDateCost;
+/home/HAH/Downloads/sc2kfix-source/hooks/hook_sc2k1996_miscellaneous.cpp:1847:				if (pBudgetArr[BUDGET_RESFUND].iCurrentCosts < scenarioAttrib.dwResPop)
+/home/HAH/Downloads/sc2kfix-source/hooks/hook_sc2k1996_miscellaneous.cpp:1849:				if (pBudgetArr[BUDGET_COMFUND].iCurrentCosts < scenarioAttrib.dwComPop)
+/home/HAH/Downloads/sc2kfix-source/hooks/hook_sc2k1996_miscellaneous.cpp:1851:				if (pBudgetArr[BUDGET_INDFUND].iCurrentCosts < scenarioAttrib.dwIndPop)
+/home/HAH/Downloads/sc2kfix-source/hooks/hook_scenario.cpp:273:	dwScenarioStartTrafficDivisor = pBudgetArr[10].iCurrentCosts + pBudgetArr[11].iCurrentCosts + pBudgetArr[12].iCurrentCosts + 1;		// XXX - this should be a descriptive macro
+/home/HAH/Downloads/sc2kfix-source/hooks/hook_tilegrowthorplacement.cpp:1185:		iFundingPercent = pBudgetArr[BUDGET_ROAD].iFundingPercent;
+/home/HAH/Downloads/sc2kfix-source/hooks/hook_tilegrowthorplacement.cpp:1205:		iFundingPercent = pBudgetArr[BUDGET_RAIL].iFundingPercent;
+/home/HAH/Downloads/sc2kfix-source/hooks/hook_tilegrowthorplacement.cpp:1222:		iFundingPercent = pBudgetArr[BUDGET_BRIDGE].iFundingPercent;
+/home/HAH/Downloads/sc2kfix-source/hooks/hook_tilegrowthorplacement.cpp:1247:				iFundingPercent = pBudgetArr[BUDGET_HIGHWAY].iFundingPercent;
+/home/HAH/Downloads/sc2kfix-source/hooks/hook_tilegrowthorplacement.cpp:1286:		iFundingPercent = pBudgetArr[BUDGET_TUNNEL].iFundingPercent;
+/home/HAH/Downloads/sc2kfix-source/hooks/hook_tilegrowthorplacement.cpp:1329:			iFundingPercent = pBudgetArr[BUDGET_SUBWAY].iFundingPercent;
+/home/HAH/Downloads/sc2kfix-source/hooks/hook_tilegrowthorplacement.cpp:2106:			++pBudgetArr[BUDGET_HEALTH].iCurrentCosts;
+/home/HAH/Downloads/sc2kfix-source/hooks/hook_tilegrowthorplacement.cpp:2109:			++pBudgetArr[BUDGET_POLICE].iCurrentCosts;
+/home/HAH/Downloads/sc2kfix-source/hooks/hook_tilegrowthorplacement.cpp:2112:			++pBudgetArr[BUDGET_FIRE].iCurrentCosts;
+/home/HAH/Downloads/sc2kfix-source/hooks/hook_tilegrowthorplacement.cpp:2115:			++pBudgetArr[BUDGET_SCHOOL].iCurrentCosts;
+/home/HAH/Downloads/sc2kfix-source/hooks/hook_tilegrowthorplacement.cpp:2127:			++pBudgetArr[BUDGET_COLLEGE].iCurrentCosts;
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:3528:GAMEOFF_ARR(WORD, wArrBondData,				0x4C9EF0)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:3610:GAMEOFF(__int16 *,	pIndividualIndTaxRate,	0x4CB3E0)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:3632:GAMEOFF(budget_t*,	pBudgetArr,				0x4CC4CC)		// Needs reverse engineering. See wiki.
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:399:				pIndividualIndTaxRate[nPosMain] = (__int16)pMiscInfo[nArrNextOffset++];
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:408:				wArrBondData[nPosMain] = (__int16)pMiscInfo[nArrOffset++];
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:428:				pBudgetArr[nPosMain].iCurrentCosts = pMiscInfo[nArrOffset];
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:429:				pBudgetArr[nPosMain].iFundingPercent = pMiscInfo[nArrNextOffset++];
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:430:				pBudgetArr[nPosMain].iYearToDateCost = pMiscInfo[nArrNextOffset];
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:434:					pBudgetArr[nPosMain].iCountMonth[nPosSub] = pMiscInfo[nArrOffset];
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:435:					pBudgetArr[nPosMain].iFundMonth[nPosSub] = pMiscInfo[nArrNextOffset];
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:1375:		pMiscInfo[nArrNextOffset++] = pIndividualIndTaxRate[nPosMain];
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:1384:		pMiscInfo[nArrOffset++] = wArrBondData[nPosMain];
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:1399:		pMiscInfo[nArrOffset] = pBudgetArr[nPosMain].iCurrentCosts;
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:1400:		pMiscInfo[nArrNextOffset++] = pBudgetArr[nPosMain].iFundingPercent;
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:1401:		pMiscInfo[nArrNextOffset] = pBudgetArr[nPosMain].iYearToDateCost;
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:1405:			pMiscInfo[nArrOffset] = pBudgetArr[nPosMain].iCountMonth[nPosSub];
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:1406:			pMiscInfo[nArrNextOffset] = pBudgetArr[nPosMain].iFundMonth[nPosSub];
+/home/HAH/Downloads/sc2kfix-source/modules/scenario_status.cpp:69:			strScenarioCurrent += std::to_string(pBudgetArr[0].iCurrentCosts) + "\n\n";
+/home/HAH/Downloads/sc2kfix-source/modules/scenario_status.cpp:74:			strScenarioCurrent += std::to_string(pBudgetArr[1].iCurrentCosts) + "\n\n";
+/home/HAH/Downloads/sc2kfix-source/modules/scenario_status.cpp:79:			strScenarioCurrent += std::to_string(pBudgetArr[2].iCurrentCosts) + "\n\n";

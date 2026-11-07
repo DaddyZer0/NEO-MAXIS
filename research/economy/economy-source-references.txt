@@ -1,0 +1,27 @@
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:354:			dwCityFunds = pMiscInfo[nArrNextOffset++];
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:355:			dwCityBonds = pMiscInfo[nArrNextOffset++];
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:408:				wArrBondData[nPosMain] = (__int16)pMiscInfo[nArrOffset++];
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:428:				pBudgetArr[nPosMain].iCurrentCosts = pMiscInfo[nArrOffset];
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:429:				pBudgetArr[nPosMain].iFundingPercent = pMiscInfo[nArrNextOffset++];
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:430:				pBudgetArr[nPosMain].iYearToDateCost = pMiscInfo[nArrNextOffset];
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:434:					pBudgetArr[nPosMain].iCountMonth[nPosSub] = pMiscInfo[nArrOffset];
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:435:					pBudgetArr[nPosMain].iFundMonth[nPosSub] = pMiscInfo[nArrNextOffset];
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:1338:	pMiscInfo[nArrNextOffset++] = dwCityFunds;
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:1339:	pMiscInfo[nArrNextOffset++] = dwCityBonds;
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:1384:		pMiscInfo[nArrOffset++] = wArrBondData[nPosMain];
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:1399:		pMiscInfo[nArrOffset] = pBudgetArr[nPosMain].iCurrentCosts;
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:1400:		pMiscInfo[nArrNextOffset++] = pBudgetArr[nPosMain].iFundingPercent;
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:1401:		pMiscInfo[nArrNextOffset] = pBudgetArr[nPosMain].iYearToDateCost;
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:1405:			pMiscInfo[nArrOffset] = pBudgetArr[nPosMain].iCountMonth[nPosSub];
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:1406:			pMiscInfo[nArrNextOffset] = pBudgetArr[nPosMain].iFundMonth[nPosSub];
+/home/HAH/Downloads/sc2kfix-source/modules/scenario_status.cpp:69:			strScenarioCurrent += std::to_string(pBudgetArr[0].iCurrentCosts) + "\n\n";
+/home/HAH/Downloads/sc2kfix-source/modules/scenario_status.cpp:74:			strScenarioCurrent += std::to_string(pBudgetArr[1].iCurrentCosts) + "\n\n";
+/home/HAH/Downloads/sc2kfix-source/modules/scenario_status.cpp:79:			strScenarioCurrent += std::to_string(pBudgetArr[2].iCurrentCosts) + "\n\n";
+/home/HAH/Downloads/sc2kfix-source/modules/scenario_status.cpp:84:			strScenarioCurrent += "$" + std::to_string(dwCityFunds - dwCityBonds) + "\n\n";
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:3090:GAMECALL(0x4015E6, void, __cdecl, SimulationPrepareBudgetDialog, int)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:3307:GAMECALL(0x402D2E, void, __stdcall, UpdateBudgetInformation, void)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:3528:GAMEOFF_ARR(WORD, wArrBondData,				0x4C9EF0)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:3542:GAMEOFF(DWORD,	dwInterestRateSum,			0x4CA400)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:3551:GAMEOFF(int,	dwCityFunds,				0x4CA444)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:3632:GAMEOFF(budget_t*,	pBudgetArr,				0x4CC4CC)		// Needs reverse engineering. See wiki.
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:3638:GAMEOFF(int,	dwCityBonds,				0x4CC4E8)

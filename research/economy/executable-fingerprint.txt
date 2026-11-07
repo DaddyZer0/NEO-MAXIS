@@ -1,0 +1,18 @@
+NEO-MAXIS ECONOMY RESEARCH
+==========================
+
+===== GAME EXECUTABLE =====
+f7a51b6244328bddcc85c2db4d205716b504eb9b6cc51b2f1556adaece96e5bb  /home/HAH/Games/SimCity2000/SC2K/SIMCITY.EXE
+/home/HAH/Games/SimCity2000/SC2K/SIMCITY.EXE: PE32 executable for MS Windows 4.00 (GUI), Intel i386, 8 sections
+
+===== PE INFORMATION =====
+Time/Date		Thu Mar  7 00:13:18 1996
+ImageBase		00400000
+MajorSubsystemVersion	4
+MinorSubsystemVersion	0
+SizeOfImage		00163000
+Time/Date stamp 		313e706d
+
+===== SDK VERSION =====
+r11b
+aa987eed862751d1e3ad20422b01768f571b7766

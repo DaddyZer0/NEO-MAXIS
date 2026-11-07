@@ -1,0 +1,53 @@
+3526-GAMEOFF_ARR(CMFC3XString,	cityToolGroupStrings,		0x4C94C8)
+3527-GAMEOFF(DWORD,	dwDisasterActive,			0x4C9EE8)
+3528:GAMEOFF_ARR(WORD, wArrBondData,				0x4C9EF0)
+3529-GAMEOFF_ARR(CMFC3XString,	cStrDataArchiveNames,	0x4CA160)
+3530-GAMEOFF(CMFC3XString,	strUnusedString,		0x4CA188)
+--
+3540-GAMEOFF(WORD,	wIndustryConnect,			0x4CA3F0)
+3541-GAMEOFF(__int16 *,	pIndividualIndDemands,	0x4CA3F4)
+3542:GAMEOFF(DWORD,	dwInterestRateSum,			0x4CA400)
+3543-GAMEOFF(WORD,	EditData,					0x4CA404)
+3544-GAMEOFF(WORD,	wSubwayXUNDCount,			0x4CA41C)
+--
+3548-GAMEOFF(WORD,	wOldArrests,				0x4CA430)
+3549-GAMEOFF(COLORREF,	colGameBackgndAbove,	0x4CA43C)
+3550:GAMEOFF(int,	dwCityLandValue,			0x4CA440)
+3551:GAMEOFF(int,	dwCityFunds,				0x4CA444)
+3552-GAMEOFF(__int16 *, wTileCount,				0x4CA4C8)		// WORD wTileCount[256]
+3553:GAMEOFF(DWORD,	dwCityValue,				0x4CA4D0)
+3554-GAMEOFF(BOOL,	bOptionsAutoGoto,			0x4CA5D8)
+3555-GAMEOFF(DWORD,	dwCityGarbage,				0x4CA5F0)		// Unused in vanilla game (sort of)
+3556-GAMEOFF(WORD,	wCityStartYear,				0x4CA5F4)
+3557-GAMEOFF(DWORD,	dwCityUnemployment,			0x4CA5F8)
+3558:GAMEOFF(DWORD*, dwNeighborValue,			0x4CA804)		// DWORD dwNeighborValue[4]
+3559-GAMEOFF(__int16,	wNewspaperChoice,		0x4CA808)
+3560-GAMEOFF(__int16,	wWaterLevel,			0x4CA818)
+--
+3597-GAMEOFF(BYTE,	bWeatherWind,				0x4CAE0C)
+3598-GAMEOFF(WORD,	wCityProgression,			0x4CB010)
+3599:GAMEOFF(DWORD,	dwNationalValue,			0x4CB014)
+3600-GAMEOFF(DWORD,	dwCityAdvertising,			0x4CB018)		// Unused in vanilla game
+3601-GAMEOFF(WORD,	wCityCurrentMonth,			0x4CB01C)
+--
+3608-GAMEOFF(BYTE,	bWeatherRain,				0x4CB3D4)
+3609-GAMEOFF(WORD,	wSewerBonus,				0x4CB3DC)
+3610:GAMEOFF(__int16 *,	pIndividualIndTaxRate,	0x4CB3E0)
+3611-GAMEOFF(WORD,	wCityCurrentSeason,			0x4CB3E8)
+3612-GAMEOFF(microsim_t*, pMicrosimArr,			0x4CB3EC)
+--
+3626-GAMEOFF(WORD,	wCurrentCityToolGroup,		0x4CB464)
+3627-GAMEOFF(int *,	cwCityStats,				0x4CC474)
+3628:GAMEOFF(BOOL,	bOptionsAutoBudget,			0x4CC4B0)
+3629-GAMEOFF(int,	dwCityWorkforceEQ,			0x4CC4B4)
+3630-GAMEOFF(DWORD,	dwWaterUsedPercentage,		0x4CC4B8)
+3631-GAMEOFF(BOOL,	bNewspaperExtra,			0x4CC4BC)
+3632:GAMEOFF(budget_t*,	pBudgetArr,				0x4CC4CC)		// Needs reverse engineering. See wiki.
+3633-GAMEOFF(BOOL,	bNoDisasters,				0x4CC4D4)
+3634-GAMEOFF(__int16*,	wNeighborNameIdx,		0x4CC4DC)
+--
+3636-GAMEOFF(__int16,	wStadiumSportsTeams,	0x4CC4E0)
+3637-GAMEOFF(BYTE,	bMilitaryBaseType,			0x4CC4E4)
+3638:GAMEOFF(int,	dwCityBonds,				0x4CC4E8)
+3639-GAMEOFF(DWORD,	dwCityTrafficCount,			0x4CC6F4)
+3640-GAMEOFF_ARR(__int16,	wCityDemand,		0x4CC8F8)

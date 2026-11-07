@@ -1,0 +1,311 @@
+==================================================
+NEO-MAXIS — ECONOMY RESEARCH
+==================================================
+
+===== 1. BUDGET ENUMERATIONS =====
+	SOUND_SIREN,
+	SOUND_HORNS,
+	SOUND_PRISON,
+	SOUND_SCHOOL,
+	SOUND_TRAIN,
+	SOUND_MILITARY,
+	SOUND_ARCO,
+	SOUND_MONSTER,
+	SOUND_BULLDOZER2,					// identical to SOUND_BULLDOZER
+	SOUND_RETICULATINGSPLINES,
+	SOUND_SILENT
+};
+
+enum {
+	BUDGET_RESFUND,
+	BUDGET_COMFUND,
+	BUDGET_INDFUND,
+	BUDGET_ORDINANCE,
+	BUDGET_BOND,
+	BUDGET_POLICE,
+	BUDGET_FIRE,
+	BUDGET_HEALTH,
+	BUDGET_SCHOOL,
+	BUDGET_COLLEGE,
+	BUDGET_ROAD,
+	BUDGET_HIGHWAY,
+	BUDGET_BRIDGE,
+	BUDGET_RAIL,
+	BUDGET_SUBWAY,
+	BUDGET_TUNNEL,
+	BUDGET_COUNT
+};
+
+enum {
+	ORDINANCE_SALES_TAX = 0,
+	ORDINANCE_INCOME_TAX,
+	ORDINANCE_LEGALIZED_GAMBLING,
+	ORDINANCE_PARKING_FINES,
+	ORDINANCE_VOLUNTEER_FIRE_DEPARTMENT,
+	ORDINANCE_PUBLIC_SMOKING_BAN,
+	ORDINANCE_FREE_CLINICS,
+	ORDINANCE_JUNIOR_SPORTS,
+	ORDINANCE_PRO_READING_CAMPAIGN,
+	ORDINANCE_ANTI_DRUG_CAMPAIGN,
+	ORDINANCE_CPR_TRAINING,
+	ORDINANCE_NEIGHBORHOOD_WATCH,
+	ORDINANCE_TOURIST_ADVERTISING,
+	ORDINANCE_BUSINESS_ADVERTISING,
+	ORDINANCE_CITY_BEAUTIFICATION,
+	ORDINANCE_ANNUAL_CARNIVAL,
+	ORDINANCE_ENERGY_CONSERVATION,
+
+===== 2. BUDGET STRUCTURE =====
+	case TRANSIT_TYPE_RAIL:
+		return "TRANSIT_TYPE_RAIL";
+	case TRANSIT_TYPE_SUBWAY:
+		return "TRANSIT_TYPE_SUBWAY";
+	default:
+		return "INVALID";
+	}
+}
+
+
+// Structs
+
+#pragma pack(push, 1)
+typedef struct {
+	BYTE bDunno[32];
+} neighbor_city_t;
+#pragma pack(pop)
+
+typedef struct {
+	int iCountMonth[12];
+	int iFundMonth[12];
+	int iCurrentCosts;
+	int iFundingPercent;
+	int iYearToDateCost;
+	int iEstimatedCost;
+} budget_t;
+
+typedef struct {
+	BYTE bName;
+	BYTE bStyle;
+	BYTE bTag;
+	BYTE bSurvey;
+	BYTE bWeather;
+} paper_t;
+
+typedef struct {
+	__int16 wType;
+	__int16 wPower;
+	BYTE bValue;
+	BYTE bItem;
+	BYTE bName;
+
+===== 3. ECONOMY FUNCTION DECLARATIONS =====
+GAMECALL(0x4014C9, __int16, __cdecl, GetHighwayTile, __int16, __int16)
+GAMECALL(0x4014CE, int, __cdecl, SpawnAeroplane, __int16 x, __int16 y, __int16 iDirection)
+GAMECALL(0x4014EC, void, __cdecl, CityToolPlaceNature, CMFC3XPoint)
+GAMECALL(0x4014F1, int, __thiscall, SimcityView_KillCursor, CSimcityView *pThis)
+GAMECALL(0x40150A, int, __thiscall, SimcityApp_ExitRequester, CSimcityAppPrimary *pThis, int iSource)
+GAMECALL(0x401514, void, __stdcall, PerhapsFreeDocumentsLibraryAndStrings)
+GAMECALL(0x401519, void, __thiscall, CityToolBar_ToolMenuEnable, CCityToolBar* pThis)
+GAMECALL(0x40152D, BOOL, __thiscall, SimcityView_MainWindowUpdate, CSimcityView *, RECT *, BOOL)
+GAMECALL(0x401555, void, __thiscall, SimcityView_ResetScreenArea, CSimcityView *)
+GAMECALL(0x401564, CScenarioDialog *, __thiscall, ScenarioDialog_Cons, CScenarioDialog *, CMainFrame *)
+GAMECALL(0x401573, int, __thiscall, SimcityView_CityToolPlaceSubway, CSimcityView*, __int16, __int16)
+GAMECALL(0x401578, void, __stdcall, PrepareGame)
+GAMECALL(0x4015A0, void, __thiscall, SimcityApp_SaveCity, CSimcityAppPrimary *pThis)
+GAMECALL(0x4015C8, void, __thiscall, CityToolBar_AdjustLayers, CCityToolBar *, BOOL)
+GAMECALL(0x4015CD, CCurrencyString *, __thiscall, CurrencyString_SetString, CCurrencyString *, const char *pSrc, int iSize, double idAmount)
+GAMECALL(0x4015E6, void, __cdecl, SimulationPrepareBudgetDialog, int)
+GAMECALL(0x401654, void, __cdecl, LoadTilesFromMemory, char *)
+GAMECALL(0x401672, void, __cdecl, SimulationToggleGrantReward, __int16 iReward, int iToggle)
+GAMECALL(0x40169F, void, __stdcall, UpdatePopulationDialog, void)
+GAMECALL(0x4016A9, void, __thiscall, SimcityApp_CallAutoSave, CSimcityAppPrimary *)
+GAMECALL(0x4016D1, int, __thiscall, SimcityView_CenterOnNewScreenCoordinates, CSimcityView *pThis, __int16 iNewScreenPointX, __int16 iNewScreenPointY)
+GAMECALL(0x4016DB, void, __thiscall, MainFrame_DisableCityToolBarButton, CMainFrame *, int)
+GAMECALL(0x4016F9, int, __cdecl, PlaceChurch, __int16 x, __int16 y)
+GAMECALL(0x40174E, void, __cdecl, SetCPoint, POINT *pt, __int16 x, __int16 y)
+GAMECALL(0x401753, void, __thiscall, SimcityApp_OnQuit, CSimcityAppPrimary *)
+GAMECALL(0x401758, void, __cdecl, DirtyThing, __int16)
+GAMECALL(0x402C02, int, __thiscall, MainFrame_CloseOwnerInformation, CMainFrame *)
+GAMECALL(0x402C0C, int, __thiscall, MainFrame_ToggleNonModalDialog, CMainFrame *pThis, UINT)
+GAMECALL(0x402C11, CGraphics *, __thiscall, Graphics_Cons, CGraphics *)
+GAMECALL(0x402C25, int, __cdecl, CityToolMenuAction, int iMouseKeys, POINT pt)
+GAMECALL(0x402C34, BOOL, __thiscall, MainFrame_LoadGraphic, CMainFrame *, const char *)
+GAMECALL(0x402C3E, int, __thiscall, CityToolBar_HitTestFromPoint, CCityToolBar *, CMFC3XPoint)
+GAMECALL(0x402C4D, void, __cdecl, FailRadioToFileID, int, UINT)
+GAMECALL(0x402C98, void, __thiscall, GameDialog_SetCursor, CGameDialog *)
+GAMECALL(0x402CCF, void, __cdecl, GetFileExceptionError, UINT, CMFC3XFileException *, CMFC3XString *)
+GAMECALL(0x402CF2, void, __thiscall, SimcityApp_SetGameCursor, CSimcityAppPrimary *pThis, int iNewCursor, BOOL bActive)
+GAMECALL(0x402D15, void, __stdcall, ClearLabels)
+GAMECALL(0x402D1F, __int16, __cdecl, CalcTileHit8, __int16, __int16)
+GAMECALL(0x402D2E, void, __stdcall, UpdateBudgetInformation, void)
+GAMECALL(0x402D33, int, __thiscall, SimcityApp_ConvertClassicCity, CSimcityAppPrimary *, char *)
+GAMECALL(0x402D51, void, __stdcall, SimulationUpdateMonthlyTrafficData, void)
+GAMECALL(0x402D56, BYTE, __stdcall, PrepareLabel, void)
+GAMECALL(0x402D6F, void, __stdcall, DrawAllColor)
+GAMECALL(0x402D97, CStadiumSelectTeamDialog *, __thiscall, StadiumSelectTeamDialog_Construct, CStadiumSelectTeamDialog *, CMainFrame *)
+GAMECALL(0x402D9C, void, __cdecl, DrawUnderTile, __int16, __int16)
+GAMECALL(0x402DA1, BYTE *, __thiscall, Graphics_LockDIBBits, CGraphics *)
+GAMECALL(0x402DD3, int, __thiscall, SimcityApp_CheckActiveGame, CSimcityAppPrimary *)
+
+===== 4. BUDGET FUNCTION DISASSEMBLY =====
+
+/home/HAH/Games/SimCity2000/SC2K/SIMCITY.EXE:     file format pei-i386
+
+
+Disassembly of section .text:
+
+004015e6 <.text+0x5e6>:
+  4015e6:	e9 f5 1b 07 00       	jmp    0x4731e0
+  4015eb:	e9 40 82 08 00       	jmp    0x489830
+  4015f0:	e9 5b f7 01 00       	jmp    0x420d50
+  4015f5:	e9 d6 e8 01 00       	jmp    0x41fed0
+  4015fa:	e9 e1 7d 01 00       	jmp    0x4193e0
+  4015ff:	e9 1c f5 07 00       	jmp    0x480b20
+  401604:	e9 27 fd 05 00       	jmp    0x461330
+  401609:	e9 b2 7c 01 00       	jmp    0x4192c0
+  40160e:	e9 5d ba 07 00       	jmp    0x47d070
+  401613:	e9 28 b9 07 00       	jmp    0x47cf40
+  401618:	e9 c3 be 05 00       	jmp    0x45d4e0
+  40161d:	e9 ee c3 06 00       	jmp    0x46da10
+  401622:	e9 29 85 01 00       	jmp    0x419b50
+  401627:	e9 b4 fa 01 00       	jmp    0x4210e0
+  40162c:	e9 ef dc 01 00       	jmp    0x41f320
+  401631:	e9 4a a2 08 00       	jmp    0x48b880
+  401636:	e9 45 f4 01 00       	jmp    0x420a80
+  40163b:	e9 d0 5b 05 00       	jmp    0x457210
+  401640:	e9 db 27 02 00       	jmp    0x423e20
+  401645:	e9 66 35 07 00       	jmp    0x474bb0
+  40164a:	e9 11 3e 07 00       	jmp    0x475460
+  40164f:	e9 ac c7 01 00       	jmp    0x41de00
+  401654:	e9 e7 56 08 00       	jmp    0x486d40
+  401659:	e9 62 bd 06 00       	jmp    0x46d3c0
+  40165e:	e9 1d 3a 02 00       	jmp    0x425080
+  401663:	e9 d8 0c 01 00       	jmp    0x412340
+  401668:	e9 a3 90 00 00       	jmp    0x40a710
+  40166d:	e9 ee 84 01 00       	jmp    0x419b60
+  401672:	e9 d9 07 04 00       	jmp    0x441e50
+  401677:	e9 24 7a 00 00       	jmp    0x4090a0
+  40167c:	e9 ef f6 01 00       	jmp    0x420d70
+  401681:	e9 6a dd 00 00       	jmp    0x40f3f0
+  401686:	e9 95 a1 07 00       	jmp    0x47b820
+  40168b:	e9 f0 3a 03 00       	jmp    0x435180
+  401690:	e9 3b c8 00 00       	jmp    0x40ded0
+  401695:	e9 06 b1 04 00       	jmp    0x44c7a0
+  40169a:	e9 21 c8 01 00       	jmp    0x41dec0
+  40169f:	e9 8c 32 01 00       	jmp    0x414930
+  4016a4:	e9 87 41 02 00       	jmp    0x425830
+  4016a9:	e9 22 ea 02 00       	jmp    0x4300d0
+  4016ae:	e9 7d f3 01 00       	jmp    0x420a30
+  4016b3:	e9 98 3f 00 00       	jmp    0x405650
+  4016b8:	e9 13 a2 04 00       	jmp    0x44b8d0
+  4016bd:	e9 3e 69 08 00       	jmp    0x488000
+  4016c2:	e9 29 7d 01 00       	jmp    0x4193f0
+  4016c7:	e9 94 fb 07 00       	jmp    0x481260
+  4016cc:	e9 0f 92 02 00       	jmp    0x42a8e0
+  4016d1:	e9 9a 00 01 00       	jmp    0x411770
+  4016d6:	e9 b5 8e 00 00       	jmp    0x40a590
+  4016db:	e9 00 9b 00 00       	jmp    0x40b1e0
+  4016e0:	e9 0b c6 01 00       	jmp    0x41dcf0
+  4016e5:	e9 b6 0d 01 00       	jmp    0x4124a0
+  4016ea:	e9 71 ee 00 00       	jmp    0x410560
+  4016ef:	e9 1c dd 06 00       	jmp    0x46f410
+  4016f4:	e9 97 c8 00 00       	jmp    0x40df90
+  4016f9:	e9 12 5c 03 00       	jmp    0x437310
+  4016fe:	e9                   	.byte 0xe9
+  4016ff:	fd                   	std
+
+===== 5. BUDGET UPDATE DISASSEMBLY =====
+
+/home/HAH/Games/SimCity2000/SC2K/SIMCITY.EXE:     file format pei-i386
+
+
+Disassembly of section .text:
+
+00402d2e <.text+0x1d2e>:
+  402d2e:	e9 6d 07 07 00       	jmp    0x4734a0
+  402d33:	e9 e8 fb 07 00       	jmp    0x482920
+  402d38:	e9 33 b1 00 00       	jmp    0x40de70
+  402d3d:	e9 ce 36 06 00       	jmp    0x466410
+  402d42:	e9 39 22 01 00       	jmp    0x414f80
+  402d47:	e9 14 47 00 00       	jmp    0x407460
+  402d4c:	e9 7f b2 00 00       	jmp    0x40dfd0
+  402d51:	e9 9a 59 05 00       	jmp    0x4586f0
+  402d56:	e9 15 ac 04 00       	jmp    0x44d970
+  402d5b:	e9 80 7f 02 00       	jmp    0x42ace0
+  402d60:	e9 fb 25 01 00       	jmp    0x415360
+  402d65:	e9 c6 64 00 00       	jmp    0x409230
+  402d6a:	e9 f1 48 00 00       	jmp    0x407660
+  402d6f:	e9 4c 8b 03 00       	jmp    0x43b8c0
+  402d74:	e9 37 ab 05 00       	jmp    0x45d8b0
+  402d79:	e9 e2 52 01 00       	jmp    0x418060
+  402d7e:	e9 4d e1 01 00       	jmp    0x420ed0
+  402d83:	e9 08 2f 07 00       	jmp    0x475c90
+  402d88:	e9 f3 9a 01 00       	jmp    0x41c880
+  402d8d:	e9 9e 99 00 00       	jmp    0x40c730
+  402d92:	e9 99 e6 07 00       	jmp    0x481430
+  402d97:	e9 d4 9b 07 00       	jmp    0x47c970
+  402d9c:	e9 9f 82 03 00       	jmp    0x43b040
+  402da1:	e9 ea 2a 07 00       	jmp    0x475890
+  402da6:	e9 f5 bb 00 00       	jmp    0x40e9a0
+  402dab:	e9 00 b0 00 00       	jmp    0x40ddb0
+  402db0:	e9 ab 6f 00 00       	jmp    0x409d60
+  402db5:	e9 26 24 03 00       	jmp    0x4351e0
+  402dba:	e9 11 3b 00 00       	jmp    0x4068d0
+  402dbf:	e9 1c e8 04 00       	jmp    0x4515e0
+  402dc4:	e9 97 86 02 00       	jmp    0x42b460
+  402dc9:	e9 c2 e3 05 00       	jmp    0x461190
+  402dce:	e9 ed 6b 08 00       	jmp    0x4899c0
+  402dd3:	e9 38 bb 02 00       	jmp    0x42e910
+  402dd8:	e9 93 d6 04 00       	jmp    0x450470
+  402ddd:	e9 7e ad 00 00       	jmp    0x40db60
+  402de2:	e9 c9 a9 06 00       	jmp    0x46d7b0
+  402de7:	e9 54 3f 05 00       	jmp    0x456d40
+  402dec:	e9 cf af 01 00       	jmp    0x41ddc0
+  402df1:	e9 0a 3a 07 00       	jmp    0x476800
+  402df6:	e9 45 c8 00 00       	jmp    0x40f640
+  402dfb:	e9 80 47 01 00       	jmp    0x417580
+  402e00:	e9 0b 30 02 00       	jmp    0x425e10
+  402e05:	e9 66 9b 01 00       	jmp    0x41c970
+  402e0a:	e9 31 66 01 00       	jmp    0x419440
+  402e0f:	e9 9c 80 07 00       	jmp    0x47aeb0
+  402e14:	e9 37 26 00 00       	jmp    0x405450
+  402e19:	e9 82 eb 06 00       	jmp    0x4719a0
+  402e1e:	e9 7d 96 06 00       	jmp    0x46c4a0
+  402e23:	e9 38 34 01 00       	jmp    0x416260
+  402e28:	e9 73 be 00 00       	jmp    0x40eca0
+  402e2d:	e9 0e 35 07 00       	jmp    0x476340
+  402e32:	e9 f9 e3 07 00       	jmp    0x481230
+  402e37:	e9 14 d1 00 00       	jmp    0x40ff50
+  402e3c:	e9 bf 82 07 00       	jmp    0x47b100
+  402e41:	e9 fa 96 06 00       	jmp    0x46c540
+  402e46:	e9 25 65 01 00       	jmp    0x419370
+  402e4b:	e9 70 e2 02 00       	jmp    0x4310c0
+
+===== 6. ECONOMY SOURCE REFERENCES =====
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:354:			dwCityFunds = pMiscInfo[nArrNextOffset++];
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:355:			dwCityBonds = pMiscInfo[nArrNextOffset++];
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:408:				wArrBondData[nPosMain] = (__int16)pMiscInfo[nArrOffset++];
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:428:				pBudgetArr[nPosMain].iCurrentCosts = pMiscInfo[nArrOffset];
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:429:				pBudgetArr[nPosMain].iFundingPercent = pMiscInfo[nArrNextOffset++];
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:430:				pBudgetArr[nPosMain].iYearToDateCost = pMiscInfo[nArrNextOffset];
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:434:					pBudgetArr[nPosMain].iCountMonth[nPosSub] = pMiscInfo[nArrOffset];
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:435:					pBudgetArr[nPosMain].iFundMonth[nPosSub] = pMiscInfo[nArrNextOffset];
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:1338:	pMiscInfo[nArrNextOffset++] = dwCityFunds;
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:1339:	pMiscInfo[nArrNextOffset++] = dwCityBonds;
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:1384:		pMiscInfo[nArrOffset++] = wArrBondData[nPosMain];
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:1399:		pMiscInfo[nArrOffset] = pBudgetArr[nPosMain].iCurrentCosts;
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:1400:		pMiscInfo[nArrNextOffset++] = pBudgetArr[nPosMain].iFundingPercent;
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:1401:		pMiscInfo[nArrNextOffset] = pBudgetArr[nPosMain].iYearToDateCost;
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:1405:			pMiscInfo[nArrOffset] = pBudgetArr[nPosMain].iCountMonth[nPosSub];
+/home/HAH/Downloads/sc2kfix-source/modules/save_vanilla.cpp:1406:			pMiscInfo[nArrNextOffset] = pBudgetArr[nPosMain].iFundMonth[nPosSub];
+/home/HAH/Downloads/sc2kfix-source/modules/scenario_status.cpp:69:			strScenarioCurrent += std::to_string(pBudgetArr[0].iCurrentCosts) + "\n\n";
+/home/HAH/Downloads/sc2kfix-source/modules/scenario_status.cpp:74:			strScenarioCurrent += std::to_string(pBudgetArr[1].iCurrentCosts) + "\n\n";
+/home/HAH/Downloads/sc2kfix-source/modules/scenario_status.cpp:79:			strScenarioCurrent += std::to_string(pBudgetArr[2].iCurrentCosts) + "\n\n";
+/home/HAH/Downloads/sc2kfix-source/modules/scenario_status.cpp:84:			strScenarioCurrent += "$" + std::to_string(dwCityFunds - dwCityBonds) + "\n\n";
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:3090:GAMECALL(0x4015E6, void, __cdecl, SimulationPrepareBudgetDialog, int)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:3307:GAMECALL(0x402D2E, void, __stdcall, UpdateBudgetInformation, void)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:3528:GAMEOFF_ARR(WORD, wArrBondData,				0x4C9EF0)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:3542:GAMEOFF(DWORD,	dwInterestRateSum,			0x4CA400)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:3551:GAMEOFF(int,	dwCityFunds,				0x4CA444)
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:3632:GAMEOFF(budget_t*,	pBudgetArr,				0x4CC4CC)		// Needs reverse engineering. See wiki.
+/home/HAH/Downloads/sc2kfix-source/include/sc2k_1996.h:3638:GAMEOFF(int,	dwCityBonds,				0x4CC4E8)
