@@ -74,7 +74,7 @@ See:
 - [Building](docs/BUILDING.md)
 - [Roadmap](docs/ROADMAP.md)
 - [Modding API](docs/MODDING_API.md)
-- [Contributing](../CONTRIBUTING.md)
+- [Contributing](CONTRIBUTING.md)
 
 Build instructions will be finalized as the Windows and Linux build
 environments are made reproducible.
