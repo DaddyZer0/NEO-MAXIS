@@ -179,7 +179,7 @@ bool TryInspectReadableMemory(
     if (address == 0 || size == 0)
         return false;
 
-    if (size > std::numeric_limits<std::uintptr_t>::max() - address)
+    if (size > (std::numeric_limits<std::uintptr_t>::max)() - address)
         return false;
 
     MEMORY_BASIC_INFORMATION memory{};
@@ -202,7 +202,7 @@ bool TryInspectReadableMemory(
         reinterpret_cast<std::uintptr_t>(memory.BaseAddress);
 
     if (memory.RegionSize >
-        std::numeric_limits<std::uintptr_t>::max() - region_base) {
+        (std::numeric_limits<std::uintptr_t>::max)() - region_base) {
         return false;
     }
 
